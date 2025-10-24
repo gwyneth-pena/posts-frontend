@@ -24,7 +24,7 @@ export default function Navbar() {
   };
 
   const userLoggedIn = !fetching && data?.userMe;
-  
+
   if (fetching && !data) return null;
 
   return (
@@ -51,7 +51,7 @@ export default function Navbar() {
             isOpen ? "d-block" : "d-none"
           } d-lg-flex`}
         >
-          <div className="ms-auto d-flex flex-column flex-lg-row gap-2 mt-3 mt-lg-0">
+          <div className="ms-auto d-flex gap-2 mt-3 mt-lg-0 flex-wrap pb-4">
             {userLoggedIn ? (
               <>
                 <Text py={0} my={0}>
@@ -69,8 +69,12 @@ export default function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="btn btn-outline-primary rounded-pill px-4"
-                  style={{ background: "#ff4500", color: "white" }}
+                  className="btn rounded-pill px-4"
+                  style={{
+                    background: "#ff4500",
+                    color: "white",
+                    width: "130px",
+                  }}
                 >
                   Login
                 </Link>
@@ -78,6 +82,7 @@ export default function Navbar() {
                   href="/register"
                   className="btn btn-primary rounded-pill px-4"
                   style={{
+                    width: "130px",
                     border: "1px solid #ff4500",
                     color: "#ff4500",
                     background: "white",
