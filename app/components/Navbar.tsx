@@ -51,7 +51,7 @@ export default function Navbar() {
             isOpen ? "d-block" : "d-none"
           } d-lg-flex`}
         >
-          <div className="ms-auto d-flex gap-2 mt-3 mt-lg-0 flex-wrap pb-4">
+          <div className="ms-auto d-flex gap-2 mt-3 mt-lg-0 flex-wrap pb-4 pb-md-0">
             {userLoggedIn ? (
               <>
                 <Text py={0} my={0}>
