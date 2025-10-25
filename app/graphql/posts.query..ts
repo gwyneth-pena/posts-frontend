@@ -9,7 +9,22 @@ export const POSTS_QUERY = gql`
       createdAt
       updatedAt
       user {
-        id
+        username
+        email
+      }
+    }
+  }
+`;
+
+export const POSTS_GET_ONE_QUERY = gql`
+  query Post($id: ID!) {
+    post(id: $id) {
+      id
+      title
+      text
+      createdAt
+      updatedAt
+      user {
         username
         email
       }

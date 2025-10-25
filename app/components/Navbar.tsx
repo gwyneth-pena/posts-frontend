@@ -61,7 +61,14 @@ export default function Navbar() {
                   </Text>
                   !
                 </Text>
-                <Text onClick={logout} cursor="pointer" py={0} my={0}>
+                <Text
+                  onClick={logout}
+                  cursor="pointer"
+                  style={{ fontSize: "12px" }}
+                  py={0}
+                  my={0}
+                  mt={1}
+                >
                   Logout
                 </Text>
               </>

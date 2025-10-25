@@ -11,6 +11,11 @@ export function middleware(request: NextRequest) {
     (sessionId && pathname.toUpperCase()?.startsWith("/FORGOT-PASSWORD"))
   ) {
     return NextResponse.redirect(new URL("/", request.url));
+  } else if (
+    !sessionId &&
+    pathname.toUpperCase()?.startsWith("/POSTS/CREATE")
+  ) {
+    return NextResponse.redirect(new URL("/login?next=%2Fposts%2Fcreate", request.url));
   }
   return NextResponse.next();
 }

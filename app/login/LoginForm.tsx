@@ -22,7 +22,7 @@ type RegisterData = {
   password: string;
 };
 
-export default function LoginForm() {
+export default function LoginForm({ next }: any) {
   const {
     register,
     handleSubmit,
@@ -57,7 +57,7 @@ export default function LoginForm() {
         type: "success",
       });
       reset();
-      window.location.href = "/";
+      window.location.href = next ?? "/";
     }
   };
 

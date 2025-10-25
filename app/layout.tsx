@@ -4,9 +4,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ChakraProviderWrapper, UrqlProvider } from "./providers";
 import Navbar from "./components/Navbar";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Script from "next/script";
 import Footer from "./components/Footer";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,8 +34,10 @@ export default function RootLayout({
             <Navbar />
             {children}
             <Footer />
+            <Toaster position="top-right" />
           </UrqlProvider>
         </ChakraProviderWrapper>
+
         <Script
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
           strategy="afterInteractive"

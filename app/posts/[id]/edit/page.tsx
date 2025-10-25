@@ -1,15 +1,16 @@
-import { Container, Box, Flex } from "@chakra-ui/react";
+import { Box, Container, Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
-import LoginForm from "./LoginForm";
+import EditPostForm from "./EditPostForm";
 
 export const metadata: Metadata = {
-  title: "Login - MyPosts",
-  description: "Login to your account and start contributing",
+  title: "Edit Post - MyPosts",
+  description: "Edit your post",
 };
 
-export default async function Login({ searchParams }: any) {
-  const params = (await searchParams) ?? null;
-  const next = params?.next ?? null;
+export default async function EditPost({ params }: any) {
+  const data = await params;
+  const id = data?.id ?? null;
+  
   return (
     <Flex
       minH={"80vh"}
@@ -25,7 +26,7 @@ export default async function Login({ searchParams }: any) {
           borderRadius="md"
           boxShadow="md"
         >
-          <LoginForm next={next} />
+          <EditPostForm id={id} />
         </Box>
       </Container>
     </Flex>
