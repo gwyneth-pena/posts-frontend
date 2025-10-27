@@ -3,11 +3,24 @@
 import { IconDotsVertical } from "@tabler/icons-react";
 import { useState } from "react";
 import ConfirmationModal from "./ConfirmationModal";
-import { useMutation } from "urql";
+import { useMutation, useQuery } from "urql";
 import { POSTS_DELETE_MUTATION } from "../graphql/posts.mutation";
 import toast from "react-hot-toast";
+import { POSTS_GET_ONE_QUERY } from "../graphql/posts.query.";
+import { USER_ME_QUERY } from "../graphql/users.query";
 
 export default function PostMenu({ id }: any) {
+  const [{ data: postData }] = useQuery({
+    query: POSTS_GET_ONE_QUERY,
+    variables: { id: id },
+    requestPolicy: "cache-and-network",
+  });
+
+  const [{ data: userData }] = useQuery({
+    query: USER_ME_QUERY,
+    requestPolicy: "cache-and-network",
+  });
+
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [_, executePostDelete] = useMutation(POSTS_DELETE_MUTATION);
   const handleConfirm = async () => {
@@ -26,6 +39,11 @@ export default function PostMenu({ id }: any) {
   const handleCancel = () => {
     setShowConfirmationModal(false);
   };
+
+  if (postData?.post?.user?.username !== userData?.userMe?.username) {
+    return;
+  }
+
   return (
     <>
       <div className="dropdown">

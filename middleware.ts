@@ -13,9 +13,24 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   } else if (
     !sessionId &&
-    pathname.toUpperCase()?.startsWith("/POSTS/CREATE")
+    pathname.toUpperCase().startsWith("/POSTS") &&
+    pathname.toUpperCase().includes("/EDIT")
   ) {
-    return NextResponse.redirect(new URL("/login?next=%2Fposts%2Fcreate", request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
+  } else if (
+    !sessionId &&
+    pathname.toUpperCase().startsWith("/POSTS") &&
+    pathname.toUpperCase().includes("/EDIT")
+  ) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  } else if (
+    !sessionId &&
+    pathname.toUpperCase()?.startsWith("/POSTS") &&
+    pathname.toUpperCase()?.includes("/CREATE")
+  ) {
+    return NextResponse.redirect(
+      new URL("/login?next=%2Fposts%2Fcreate", request.url)
+    );
   }
   return NextResponse.next();
 }

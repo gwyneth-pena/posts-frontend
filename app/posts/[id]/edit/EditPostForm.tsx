@@ -2,6 +2,7 @@
 
 import { POSTS_UPDATE_MUTATION } from "@/app/graphql/posts.mutation";
 import { POSTS_GET_ONE_QUERY } from "@/app/graphql/posts.query.";
+import { USER_ME_QUERY } from "@/app/graphql/users.query";
 import {
   Alert,
   Button,
@@ -16,28 +17,33 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "urql";
 
-type PostData = {
+type PostpostData = {
   title: string;
   text: string;
 };
 
 export default function EditPostForm({ id }: any) {
+  const [{ data: userpostData }] = useQuery({
+    query: USER_ME_QUERY,
+    requestPolicy: "cache-and-network",
+  });
+
+  const [{ data: postData }] = useQuery({
+    query: POSTS_GET_ONE_QUERY,
+    variables: { id: id },
+    requestPolicy: "cache-and-network",
+  });
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<PostData>({
+  } = useForm<PostpostData>({
     defaultValues: {
       title: "",
       text: "",
     },
-  });
-
-  const [{ data, fetching }] = useQuery({
-    query: POSTS_GET_ONE_QUERY,
-    variables: { id: id },
-    requestPolicy: "cache-and-network",
   });
 
   const [mutationResult, executePostEdit] = useMutation(POSTS_UPDATE_MUTATION);
@@ -51,19 +57,19 @@ export default function EditPostForm({ id }: any) {
   });
 
   useEffect(() => {
-    if (data?.post) {
+    if (postData?.post) {
       reset({
-        title: data.post.title,
-        text: data.post.text,
+        title: postData.post.title,
+        text: postData.post.text,
       });
     }
-  }, [data, reset]);
+  }, [postData, reset]);
 
-  const onSubmit = async (data: PostData) => {
+  const onSubmit = async (postData: PostpostData) => {
     const result = await executePostEdit({
       id: id,
-      title: data.title,
-      text: data.text,
+      title: postData.title,
+      text: postData.text,
     });
     if (result.error) {
       setSubmitFeedback({
@@ -79,6 +85,11 @@ export default function EditPostForm({ id }: any) {
       window.location.href = "/";
     }
   };
+
+  if (!userpostData || !postData) return <div>Loading...</div>;
+  if (postData.post.user.username !== userpostData.userMe.username) {
+    return <div>You are not authorized to edit this post.</div>;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

@@ -55,10 +55,18 @@ export default function RegisterForm() {
       if (
         result.error.graphQLErrors?.[0]?.message
           ?.toLowerCase()
-          .includes("duplicate")
+          .includes("duplicate") &&
+        result.error.graphQLErrors?.[0]?.message
+          ?.toLowerCase()
+          .includes("user_email")
       ) {
         setSubmitFeedback({
-          message: "Username already exists.",
+          message: "User with that email already exists.",
+          type: "error",
+        });
+      } else {
+        setSubmitFeedback({
+          message: "User with that username already exists.",
           type: "error",
         });
       }
