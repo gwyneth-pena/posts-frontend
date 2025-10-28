@@ -9,11 +9,14 @@ import {
   Input,
   Stack,
   Text,
-  Textarea,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
 import { useMutation } from "urql";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 type PostData = {
   title: string;
@@ -24,33 +27,37 @@ export default function CreatePostForm() {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     reset,
     formState: { errors },
-  } = useForm<PostData>();
+  } = useForm<PostData>({
+    defaultValues: { title: "", text: "" },
+  });
 
   const [mutationResult, executePostCreate] = useMutation(
     POSTS_CREATE_MUTATION
   );
-
   const [submitFeedback, setSubmitFeedback] = useState<{
     message: string;
     type: "success" | "error";
-  }>({
-    message: "",
-    type: "success",
-  });
+  }>({ message: "", type: "success" });
+
+  const text = watch("text");
+
+  register("text", { required: "Body is required." });
 
   const onSubmit = async (data: PostData) => {
     const result = await executePostCreate({
       title: data.title,
       text: data.text,
     });
-    if (result.error) {
+    if (result.error)
       setSubmitFeedback({
         message: "Something went wrong. Try again.",
         type: "error",
       });
-    } else {
+    else {
       setSubmitFeedback({
         message: "Post created successfully.",
         type: "success",
@@ -85,23 +92,24 @@ export default function CreatePostForm() {
             type="text"
             id="title"
             placeholder="Enter post title"
-            {...register("title", {
-              required: "Title is required.",
-            })}
+            {...register("title", { required: "Title is required." })}
             size="lg"
           />
           <Field.ErrorText>{errors.title?.message}</Field.ErrorText>
         </Field.Root>
+
         <Field.Root invalid={!!errors.text}>
           <Field.Label htmlFor="text">Body</Field.Label>
-          <Textarea
-            placeholder="Write your post here"
-            id="text"
-            {...register("text", { required: "Body is required." })}
-            size="lg"
+          <ReactQuill
+            style={{ width: "100%" }}
+            theme="snow"
+            value={text || ""}
+            onChange={(val) => setValue("text", val, { shouldValidate: true })}
+            placeholder="Write something..."
           />
           <Field.ErrorText>{errors.text?.message}</Field.ErrorText>
         </Field.Root>
+
         <Button
           marginTop={2}
           type="submit"

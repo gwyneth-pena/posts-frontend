@@ -50,7 +50,18 @@ export default async function Home() {
             </Flex>
 
             <small className="text-muted">{post.user.username}</small>
-            <p className="mt-3">{post.text}</p>
+            <p
+              className="mt-3"
+              style={{
+                display: "-webkit-box",
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {post.text.replace(/<[^>]+>/g, "")}
+            </p>
             <small className="text-muted">
               {format(new Date(Number(post.createdAt)), "PPP 'at' p")}
             </small>

@@ -11,16 +11,19 @@ import {
   Input,
   Stack,
   Text,
-  Textarea,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "urql";
+import "react-quill/dist/quill.snow.css";
+import dynamic from "next/dynamic";
 
 type PostpostData = {
   title: string;
   text: string;
 };
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function EditPostForm({ id }: any) {
   const [{ data: userpostData }] = useQuery({
@@ -38,6 +41,8 @@ export default function EditPostForm({ id }: any) {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<PostpostData>({
     defaultValues: {
@@ -86,8 +91,11 @@ export default function EditPostForm({ id }: any) {
     }
   };
 
+  register("text", { required: "Body is required." });
+  const text = watch("text");
+
   if (!userpostData || !postData) return <div>Loading...</div>;
-  if (postData.post.user.username !== userpostData.userMe.username) {
+  if (postData.post?.user?.username !== userpostData.userMe.username) {
     return <div>You are not authorized to edit this post.</div>;
   }
 
@@ -125,11 +133,12 @@ export default function EditPostForm({ id }: any) {
         </Field.Root>
         <Field.Root invalid={!!errors.text}>
           <Field.Label htmlFor="text">Body</Field.Label>
-          <Textarea
-            placeholder="Write your post here"
-            id="text"
-            {...register("text", { required: "Body is required." })}
-            size="lg"
+          <ReactQuill
+            className="w-100"
+            theme="snow"
+            value={text}
+            onChange={(val) => setValue("text", val, { shouldValidate: true })}
+            placeholder="Write something..."
           />
           <Field.ErrorText>{errors.text?.message}</Field.ErrorText>
         </Field.Root>
