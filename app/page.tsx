@@ -30,7 +30,7 @@ export default async function Home() {
         <Link className="ms-auto mb-4" href="/posts/create">
           <Button bg="reddit.500" color="white" rounded="md" ms="auto">
             <IconMessageCircle size={20} stroke={2} />
-            &nbsp; Share Your Thoughts
+            Share Your Thoughts
           </Button>
         </Link>
 
