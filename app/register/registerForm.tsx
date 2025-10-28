@@ -107,6 +107,10 @@ export default function RegisterForm() {
             placeholder="Enter your username"
             {...register("username", {
               required: "Username is required.",
+              pattern: {
+                value: /^\S+$/,
+                message: "Username cannot contain spaces.",
+              },
             })}
             size="lg"
           />
