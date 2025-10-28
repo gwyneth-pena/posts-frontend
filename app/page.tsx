@@ -3,7 +3,7 @@ import { POSTS_QUERY } from "./graphql/posts.query.";
 import { createUrqlClient } from "./lib/urql-client";
 import Link from "next/link";
 import { Metadata } from "next";
-import { IconFilePlus } from "@tabler/icons-react";
+import { IconMessageCircle } from "@tabler/icons-react";
 import { format } from "date-fns";
 import PostMenu from "./components/PostMenu";
 
@@ -29,8 +29,8 @@ export default async function Home() {
       <Container maxW="100%" bg="gray.100" centerContent py={10} px={8}>
         <Link className="ms-auto mb-4" href="/posts/create">
           <Button bg="reddit.500" color="white" rounded="md" ms="auto">
-            <IconFilePlus size={20} stroke={2} />
-            &nbsp;Create Post
+            <IconMessageCircle size={20} stroke={2} />
+            &nbsp; Share Your Thoughts
           </Button>
         </Link>
 
