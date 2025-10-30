@@ -3,9 +3,14 @@ import { POSTS_QUERY } from "./graphql/posts.query.";
 import { createUrqlClient } from "./lib/urql-client";
 import Link from "next/link";
 import { Metadata } from "next";
-import { IconMessageCircle } from "@tabler/icons-react";
+import {
+  IconMessageCircle,
+  IconThumbDown,
+  IconThumbUp,
+} from "@tabler/icons-react";
 import { format } from "date-fns";
 import PostMenu from "./components/PostMenu";
+import { formatNumber } from "./components/utils/numbers";
 
 export const metadata: Metadata = {
   title: "MyPosts",
@@ -62,9 +67,25 @@ export default async function Home() {
             >
               {post.text.replace(/<[^>]+>/g, "")}
             </p>
-            <small className="text-muted">
-              {format(new Date(Number(post.createdAt)), "PPP 'at' p")}
-            </small>
+            <Flex justify="space-between" align="start">
+              <small className="text-muted">
+                {format(new Date(Number(post.createdAt)), "PPP 'at' p")}
+              </small>
+              <div className="d-flex">
+                <div className="d-flex">
+                  <IconThumbUp size={20} stroke={1.5} className="me-1" />
+                  <small className="me-3">
+                    {formatNumber(post.likeCount || 0)}
+                  </small>
+                  <IconThumbDown size={20} stroke={1.5} className="me-1" />
+                  <small className="me-3">
+                    {formatNumber(post.dislikeCount || 0)}
+                  </small>
+                  <IconMessageCircle size={20} stroke={1.5} className="me-1" />
+                  <small>{formatNumber(post.commentCount || 0)}</small>
+                </div>
+              </div>
+            </Flex>
           </Box>
         ))}
       </Container>

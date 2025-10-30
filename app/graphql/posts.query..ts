@@ -11,7 +11,10 @@ export const POSTS_QUERY = gql`
       user {
         username
         email
-      }
+      },
+      commentCount
+      likeCount 
+      dislikeCount
     }
   }
 `;
@@ -28,6 +31,9 @@ export const POSTS_GET_ONE_QUERY = gql`
         username
         email
       }
+      commentCount
+      likeCount
+      dislikeCount
     }
   }
 `;

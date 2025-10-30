@@ -30,6 +30,7 @@ export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm px-4">
       <div className="container-fluid">
+        {/* Logo */}
         <Link href="/" className="navbar-brand fw-bold text-danger">
           MyPosts
         </Link>
@@ -51,23 +52,39 @@ export default function Navbar() {
             isOpen ? "d-block" : "d-none"
           } d-lg-flex`}
         >
-          <div className="ms-auto d-flex gap-2 mt-3 mt-lg-0 flex-wrap pb-4 pb-md-0">
+          <div className="ms-auto d-flex align-items-center gap-3 flex-wrap mt-3 mt-lg-0 pb-4 pb-md-0">
             {userLoggedIn ? (
               <>
-                <Text py={0} my={0}>
+                {/* Greeting */}
+                <Text py={0} my={0} fontSize="14px" whiteSpace="nowrap">
                   Hello,{" "}
-                  <Text as="span" color="reddit.400" fontWeight="bold">
-                    {data.userMe.username}
-                  </Text>
+                  <Link
+                    href="/profile"
+                    className="text-decoration-none"
+                    passHref
+                  >
+                    <Text
+                      as="span"
+                      color="reddit.400"
+                      fontWeight="bold"
+                      cursor="pointer"
+                    >
+                      {data.userMe.username}
+                    </Text>
+                  </Link>
                   !
                 </Text>
+
+                {/* Logout */}
                 <Text
                   onClick={logout}
                   cursor="pointer"
-                  style={{ fontSize: "12px" }}
+                  fontSize="14px"
+                  color="red.500"
+                  _hover={{ textDecoration: "underline" }}
                   py={0}
                   my={0}
-                  mt={1}
+                  whiteSpace="nowrap"
                 >
                   Logout
                 </Text>
