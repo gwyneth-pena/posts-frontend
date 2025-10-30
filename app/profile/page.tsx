@@ -1,13 +1,10 @@
 import { Container, Box, Flex, HStack, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
 import { USER_ME_QUERY } from "../graphql/users.query";
-import { createUrqlClient } from "../lib/urql-client";
-import { cookies } from "next/headers";
+import { createUrqlClient } from "../lib/urql-server";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore?.toString();
-  const { client } = createUrqlClient(cookieHeader || "");
+  const { client } = await createUrqlClient();
 
   const res = await client
     .query(USER_ME_QUERY, {
@@ -23,9 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Profile() {
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore?.toString();
-  const { client } = createUrqlClient(cookieHeader || "");
+  const { client } = await createUrqlClient();
 
   const userMeRes = await client
     .query(USER_ME_QUERY, {

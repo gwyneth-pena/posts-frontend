@@ -1,4 +1,6 @@
-import { createClient, cacheExchange, fetchExchange, ssrExchange } from "urql";
+"use client";
+
+import { createClient, cacheExchange, fetchExchange } from "urql";
 
 export const UrqlClient = createClient({
   url: process.env.NEXT_PUBLIC_GRAPH_API || "",
@@ -7,18 +9,3 @@ export const UrqlClient = createClient({
   },
   exchanges: [cacheExchange, fetchExchange],
 });
-
-export const createUrqlClient = (cookie?: string) => {
-  const ssrCache = ssrExchange({ isClient: typeof window !== "undefined" });
-
-  const client = createClient({
-    url: process.env.NEXT_PUBLIC_GRAPH_API || "",
-    fetchOptions: {
-      credentials: "include",
-      headers: cookie ? { cookie } : {},
-    },
-    exchanges: [cacheExchange, ssrCache, fetchExchange],
-  });
-
-  return { client, ssrCache };
-};

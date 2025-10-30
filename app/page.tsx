@@ -12,8 +12,7 @@ import {
 import { format } from "date-fns";
 import PostMenu from "./components/PostMenu";
 import { formatNumber } from "./components/utils/numbers";
-import { cookies } from "next/headers";
-import { createUrqlClient } from "./lib/urql-client";
+import { createUrqlClient } from "./lib/urql-server";
 
 export const metadata: Metadata = {
   title: "MyPosts",
@@ -21,8 +20,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const cookie = await cookies();
-  const { client }: any = createUrqlClient(cookie?.toString());
+  const { client }: any = await createUrqlClient();
   const posts = await client
     .query(
       POSTS_QUERY,

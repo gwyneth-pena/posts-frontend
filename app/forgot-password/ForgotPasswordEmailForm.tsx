@@ -47,7 +47,7 @@ export default function ForgotPasswordEmailForm() {
 
     if (result.error) {
       setSubmitFeedback({
-        message: "Invalid email. Try again.",
+        message: "Email is not registered.",
         type: "error",
       });
     } else {
