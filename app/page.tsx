@@ -1,16 +1,19 @@
 import { Box, Button, Container, Flex } from "@chakra-ui/react";
 import { POSTS_QUERY } from "./graphql/posts.query.";
-import { createUrqlClient } from "./lib/urql-client";
 import Link from "next/link";
 import { Metadata } from "next";
 import {
   IconMessageCircle,
   IconThumbDown,
+  IconThumbDownFilled,
   IconThumbUp,
+  IconThumbUpFilled,
 } from "@tabler/icons-react";
 import { format } from "date-fns";
 import PostMenu from "./components/PostMenu";
 import { formatNumber } from "./components/utils/numbers";
+import { cookies } from "next/headers";
+import { createUrqlClient } from "./lib/urql-client";
 
 export const metadata: Metadata = {
   title: "MyPosts",
@@ -18,7 +21,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const { client }: any = createUrqlClient();
+  const cookie = await cookies();
+  const { client }: any = createUrqlClient(cookie?.toString());
   const posts = await client
     .query(
       POSTS_QUERY,
@@ -51,7 +55,7 @@ export default async function Home() {
           >
             <Flex justify="space-between" align="start" mb={2}>
               <h4 style={{ fontWeight: "600" }}>{post.title}</h4>
-              <PostMenu id={post.id} />
+              <PostMenu post={post} />
             </Flex>
 
             <small className="text-muted">{post.user.username}</small>
@@ -73,11 +77,27 @@ export default async function Home() {
               </small>
               <div className="d-flex">
                 <div className="d-flex">
-                  <IconThumbUp size={20} stroke={1.5} className="me-1" />
+                  {post.userVote === 1 ? (
+                    <IconThumbUpFilled
+                      size={20}
+                      stroke={1.5}
+                      className="me-1"
+                    />
+                  ) : (
+                    <IconThumbUp size={20} stroke={1.5} className="me-1" />
+                  )}
                   <small className="me-3">
                     {formatNumber(post.likeCount || 0)}
                   </small>
-                  <IconThumbDown size={20} stroke={1.5} className="me-1" />
+                  {post.userVote === -1 ? (
+                    <IconThumbDownFilled
+                      size={20}
+                      stroke={1.5}
+                      className="me-1"
+                    />
+                  ) : (
+                    <IconThumbDown size={20} stroke={1.5} className="me-1" />
+                  )}
                   <small className="me-3">
                     {formatNumber(post.dislikeCount || 0)}
                   </small>

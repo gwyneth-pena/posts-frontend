@@ -15,6 +15,8 @@ export const POSTS_QUERY = gql`
       commentCount
       likeCount 
       dislikeCount
+      userVote
+      isOwner
     }
   }
 `;
@@ -34,6 +36,8 @@ export const POSTS_GET_ONE_QUERY = gql`
       commentCount
       likeCount
       dislikeCount
+      userVote
+      isOwner
     }
   }
 `;
