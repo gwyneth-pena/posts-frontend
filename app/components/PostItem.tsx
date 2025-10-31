@@ -61,8 +61,7 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
       }
       await deleteVoteByPost({ postId: post.id });
       post.userVote = null;
-      if (value === 1) post.likeCount -= 1;
-      else post.dislikeCount -= 1;
+      value === 1 ? post.likeCount-- : post.dislikeCount--;
     },
     [post.id, vote]
   );
