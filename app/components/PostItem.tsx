@@ -46,7 +46,7 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
         await vote({ value, postId: post.id });
         value === 1
           ? (post.likeCount = post.likeCount + 1)
-          : (post.dislikeCount = post.dislikeCount++);
+          : (post.dislikeCount = post.dislikeCount + 1);
       }
       post.userVote = value;
     },
@@ -55,14 +55,14 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
 
   const removeVote = useCallback(
     async (value: number) => {
-      console.log("gwen gorobao");
       if (!user) {
         router.push("/login");
         return;
       }
       await deleteVoteByPost({ postId: post.id });
       post.userVote = null;
-      value === 1 ? post.likeCount-- : post.likeCount++;
+      if (value === 1) post.likeCount -= 1;
+      else post.dislikeCount -= 1;
     },
     [post.id, vote]
   );
