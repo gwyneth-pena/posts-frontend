@@ -5,6 +5,7 @@ import { Metadata } from "next";
 import { IconMessageCircle } from "@tabler/icons-react";
 import { createUrqlClient } from "./lib/urql-server";
 import PostItem from "./components/PostItem";
+import { USER_ME_QUERY } from "./graphql/users.query";
 
 export const metadata: Metadata = {
   title: "MyPosts",
@@ -23,6 +24,16 @@ export default async function Home() {
     )
     .toPromise();
 
+  const user = await client
+    .query(
+      USER_ME_QUERY,
+      {},
+      {
+        requestPolicy: "cache-and-network",
+      }
+    )
+    .toPromise();
+
   return (
     <Flex minH="80vh" bg="gray.100" justifyContent="center">
       <Container maxW="100%" bg="gray.100" centerContent py={10} px={8}>
@@ -34,7 +45,7 @@ export default async function Home() {
         </Link>
 
         {posts.data?.posts.map((post: any) => (
-          <PostItem key={post.id} post={post} />
+          <PostItem user={user?.data?.userMe} key={post.id} post={post} />
         ))}
       </Container>
     </Flex>

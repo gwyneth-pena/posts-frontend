@@ -11,23 +11,17 @@ import { Box, Flex } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { formatNumber } from "./utils/numbers";
 import { useCallback } from "react";
-import { useMutation, useQuery } from "urql";
+import { useMutation } from "urql";
 import {
   VOTE_CREATE_MUTATION,
   VOTE_DELETE_BY_POST_ID_MUTATION,
   VOTE_UPDATE_BY_POST_ID_MUTATION,
 } from "../graphql/votes.mutation";
 import PostMenu from "./PostMenu";
-import { USER_ME_QUERY } from "../graphql/users.query";
 import { useRouter } from "next/navigation";
 
-export default function PostItem({ post }: { post: any }) {
+export default function PostItem({ post, user }: { post: any; user: any }) {
   const router = useRouter();
-
-  const [{ data: userData }] = useQuery({
-    query: USER_ME_QUERY,
-    requestPolicy: "cache-and-network",
-  });
 
   const [, vote] = useMutation(VOTE_CREATE_MUTATION);
   const [, updateVoteByPost] = useMutation(VOTE_UPDATE_BY_POST_ID_MUTATION);
@@ -35,24 +29,34 @@ export default function PostItem({ post }: { post: any }) {
 
   const likeOrDislikePost = useCallback(
     async (value: number) => {
-      if (!userData?.userMe) {
+      if (!user) {
         router.push("/login");
         return;
       }
       if (post.userVote) {
         await updateVoteByPost({ value, postId: post.id });
+        if (value === 1) {
+          post.likeCount = post.likeCount + 1;
+          post.dislikeCount = post.dislikeCount - 1;
+        } else {
+          post.likeCount = post.likeCount - 1;
+          post.dislikeCount = post.dislikeCount + 1;
+        }
       } else if (!post.userVote) {
         await vote({ value, postId: post.id });
+        value === 1
+          ? (post.likeCount = post.likeCount + 1)
+          : (post.dislikeCount = post.dislikeCount++);
       }
       post.userVote = value;
-      value === 1 ? post.likeCount++ : post.likeCount--;
     },
     [post.id, vote]
   );
 
   const removeVote = useCallback(
     async (value: number) => {
-      if (!userData?.userMe) {
+      console.log("gwen gorobao");
+      if (!user) {
         router.push("/login");
         return;
       }
@@ -98,7 +102,7 @@ export default function PostItem({ post }: { post: any }) {
         <div className="d-flex">
           {post.userVote === 1 ? (
             <IconThumbUpFilled
-              onDoubleClick={() => removeVote(1)}
+              onClick={() => removeVote(1)}
               size={20}
               stroke={1.5}
               className="me-1 cursor-pointer"
@@ -115,7 +119,7 @@ export default function PostItem({ post }: { post: any }) {
 
           {post.userVote === -1 ? (
             <IconThumbDownFilled
-              onDoubleClick={() => removeVote(-1)}
+              onClick={() => removeVote(-1)}
               size={20}
               stroke={1.5}
               className="me-1 cursor-pointer"
