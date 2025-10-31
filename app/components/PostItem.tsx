@@ -35,7 +35,10 @@ export default function PostItem({ post }: { post: any }) {
 
   const likeOrDislikePost = useCallback(
     async (value: number) => {
-      if (!userData?.userMe) router.push("/login");
+      if (!userData?.userMe) {
+        router.push("/login");
+        return;
+      }
       if (post.userVote) {
         await updateVoteByPost({ value, postId: post.id });
       } else if (!post.userVote) {
@@ -49,7 +52,10 @@ export default function PostItem({ post }: { post: any }) {
 
   const removeVote = useCallback(
     async (value: number) => {
-      if (!userData?.userMe) router.push("/login");
+      if (!userData?.userMe) {
+        router.push("/login");
+        return;
+      }
       await deleteVoteByPost({ postId: post.id });
       post.userVote = null;
       value === 1 ? post.likeCount-- : post.likeCount++;
