@@ -1,18 +1,10 @@
-import { Box, Button, Container, Flex } from "@chakra-ui/react";
+import { Button, Container, Flex } from "@chakra-ui/react";
 import { POSTS_QUERY } from "./graphql/posts.query.";
 import Link from "next/link";
 import { Metadata } from "next";
-import {
-  IconMessageCircle,
-  IconThumbDown,
-  IconThumbDownFilled,
-  IconThumbUp,
-  IconThumbUpFilled,
-} from "@tabler/icons-react";
-import { format } from "date-fns";
-import PostMenu from "./components/PostMenu";
-import { formatNumber } from "./components/utils/numbers";
+import { IconMessageCircle } from "@tabler/icons-react";
 import { createUrqlClient } from "./lib/urql-server";
+import PostItem from "./components/PostItem";
 
 export const metadata: Metadata = {
   title: "MyPosts",
@@ -42,69 +34,7 @@ export default async function Home() {
         </Link>
 
         {posts.data?.posts.map((post: any) => (
-          <Box
-            key={post.id}
-            w={["100%", "90%", "600px"]}
-            bg="white"
-            p={6}
-            mb={4}
-            borderRadius="md"
-            boxShadow="md"
-          >
-            <Flex justify="space-between" align="start" mb={2}>
-              <h4 style={{ fontWeight: "600" }}>{post.title}</h4>
-              <PostMenu post={post} />
-            </Flex>
-
-            <small className="text-muted">{post.user.username}</small>
-            <p
-              className="mt-3"
-              style={{
-                display: "-webkit-box",
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {post.text.replace(/<[^>]+>/g, "")}
-            </p>
-            <Flex justify="space-between" align="start">
-              <small className="text-muted">
-                {format(new Date(Number(post.createdAt)), "PPP 'at' p")}
-              </small>
-              <div className="d-flex">
-                <div className="d-flex">
-                  {post.userVote === 1 ? (
-                    <IconThumbUpFilled
-                      size={20}
-                      stroke={1.5}
-                      className="me-1"
-                    />
-                  ) : (
-                    <IconThumbUp size={20} stroke={1.5} className="me-1" />
-                  )}
-                  <small className="me-3">
-                    {formatNumber(post.likeCount || 0)}
-                  </small>
-                  {post.userVote === -1 ? (
-                    <IconThumbDownFilled
-                      size={20}
-                      stroke={1.5}
-                      className="me-1"
-                    />
-                  ) : (
-                    <IconThumbDown size={20} stroke={1.5} className="me-1" />
-                  )}
-                  <small className="me-3">
-                    {formatNumber(post.dislikeCount || 0)}
-                  </small>
-                  <IconMessageCircle size={20} stroke={1.5} className="me-1" />
-                  <small>{formatNumber(post.commentCount || 0)}</small>
-                </div>
-              </div>
-            </Flex>
-          </Box>
+          <PostItem key={post.id} post={post} />
         ))}
       </Container>
     </Flex>
