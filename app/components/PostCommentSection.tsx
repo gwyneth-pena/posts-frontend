@@ -61,7 +61,7 @@ export default function PostCommentSection({ id }: { id: string }) {
       postId: id,
     });
     if (result.error) {
-      setTimeout(() => (window.location.href = `/posts/${id}`), 1000);
+        window.location.href = "/login";
     } else {
       toast.success("Comment added successfully.");
       reset();
