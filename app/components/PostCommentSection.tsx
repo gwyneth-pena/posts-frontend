@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { COMMENTS_CREATE_MUTATION } from "../graphql/comments.mutations";
 import toast from "react-hot-toast";
+import { useEffect, useRef, useState } from "react";
 
 type CommentData = {
   text: string;
@@ -17,7 +18,11 @@ type CommentData = {
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function PostCommentSection({ id }: { id: string }) {
-  const [{ data: commentData }] = useQuery({
+  const lastCommentRef = useRef<HTMLDivElement | null>(null);
+
+  const [justAdded, setJustAdded] = useState(false);
+
+  const [{ data: commentData }, reexecuteQuery] = useQuery({
     query: COMMENTS_BY_POST_QUERY,
     variables: { postId: id },
     requestPolicy: "cache-and-network",
@@ -56,19 +61,45 @@ export default function PostCommentSection({ id }: { id: string }) {
       postId: id,
     });
     if (result.error) {
-      window.location.href = "/login";
+      setTimeout(() => (window.location.href = `/posts/${id}`), 1000);
     } else {
       toast.success("Comment added successfully.");
       reset();
-      setTimeout(() => window.location.reload(), 1000);
+      reexecuteQuery({ requestPolicy: "network-only" });
+      setJustAdded(true);
+      setTimeout(() => {
+        lastCommentRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+      setJustAdded(false);
     }
   };
+
+  useEffect(() => {
+    if (justAdded && commentData?.commentsByPost?.length) {
+      lastCommentRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      setJustAdded(false);
+    }
+  }, [commentData?.commentsByPost, justAdded]);
 
   return (
     <Box w={["100%"]} bg="white" p={6} mb={4} borderRadius="md" boxShadow="md">
       <p className="fw-bold">Comments</p>
-      {commentData?.commentsByPost?.map((comment: any) => (
-        <div className="bg-gray-100 px-4 py-2 mb-2" key={comment.id}>
+      {commentData?.commentsByPost?.map((comment: any, idx: number) => (
+        <div
+          ref={
+            idx === commentData.commentsByPost.length - 1
+              ? lastCommentRef
+              : null
+          }
+          className="bg-gray-100 px-4 py-2 mb-2"
+          key={comment.id}
+        >
           <small className="text-muted">
             {comment.user.username} |{"  "}
             {format(new Date(Number(comment.createdAt)), "PPP 'at' p")}
