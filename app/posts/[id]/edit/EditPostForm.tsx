@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "urql";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
 
 type PostpostData = {
   title: string;
@@ -36,6 +37,9 @@ export default function EditPostForm({ id }: any) {
     variables: { id: id },
     requestPolicy: "cache-and-network",
   });
+
+  const searchParams = useSearchParams();
+  const isSingle = searchParams.get("single") === "true";
 
   const {
     register,
@@ -87,7 +91,11 @@ export default function EditPostForm({ id }: any) {
         type: "success",
       });
       reset();
-      window.location.href = "/";
+      if (isSingle) {
+        window.location.href = `/posts/${id}`;
+      } else {
+        window.location.href = "/";
+      }
     }
   };
 

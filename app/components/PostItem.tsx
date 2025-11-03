@@ -77,7 +77,13 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
       boxShadow="md"
     >
       <Flex justify="space-between" align="start" mb={2}>
-        <h4 style={{ fontWeight: "600" }}>{post.title}</h4>
+        <h4
+          style={{ fontWeight: "600" }}
+          onClick={() => router.push(`/posts/${post.id}`)}
+          className="cursor-pointer hover:underline"
+        >
+          {post.title}
+        </h4>
         <PostMenu post={post} />
       </Flex>
 
@@ -137,6 +143,7 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
             size={20}
             stroke={1.5}
             className="me-1 cursor-pointer"
+            onClick={() => router.push(`/posts/${post.id}`)}
           />
           <small>{formatNumber(post.commentCount || 0)}</small>
         </div>
