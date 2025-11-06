@@ -9,7 +9,6 @@ import {
 } from "@tabler/icons-react";
 import { Box, Flex } from "@chakra-ui/react";
 import { format } from "date-fns";
-import { formatNumber } from "./utils/numbers";
 import { useCallback } from "react";
 import { useMutation } from "urql";
 import {
@@ -19,6 +18,7 @@ import {
 } from "../graphql/votes.mutation";
 import PostMenu from "./PostMenu";
 import { useRouter } from "next/navigation";
+import { formatNumber } from "../utils/numbers";
 
 export default function PostItem({ post, user }: { post: any; user: any }) {
   const router = useRouter();

@@ -2,7 +2,6 @@
 
 import { format } from "date-fns";
 import { POSTS_GET_ONE_QUERY } from "../graphql/posts.query.";
-import { USER_ME_QUERY } from "../graphql/users.query";
 import { useQuery } from "urql";
 import { IconPencil } from "@tabler/icons-react";
 

@@ -1,0 +1,72 @@
+"use client";
+
+import { format } from "date-fns";
+import { useMutation } from "urql";
+import { COMMENT_DELETE_MUTATION } from "../graphql/comments.mutations";
+import toast from "react-hot-toast";
+
+export default function CommentItem({
+  comment,
+  userMe,
+  onSuccess,
+  ref,
+}: {
+  comment: any;
+  userMe: any;
+  onSuccess: any;
+  ref: any;
+}) {
+  const isOwner = comment.user.username === userMe?.username;
+
+  const [_, executeCommentDelete] = useMutation(COMMENT_DELETE_MUTATION);
+
+  const deleteComment = async () => {
+    const result = await executeCommentDelete({
+      id: comment.id,
+    });
+    if (result.error) {
+      window.location.href = "/login";
+    } else {
+      toast.success("Comment deleted successfully.");
+      onSuccess?.();
+    }
+  };
+
+  return (
+    <div ref={ref} className="bg-gray-100 px-4 py-2 mb-2" key={comment.id}>
+      <small className="text-muted">
+        {comment.user.username} |{"  "}
+        {format(new Date(Number(comment.createdAt)), "PPP 'at' p")}
+      </small>
+      <div
+        className="mb-0"
+        dangerouslySetInnerHTML={{ __html: comment.text }}
+      ></div>{" "}
+      <div className="d-flex">
+        <small
+          style={{ fontSize: "12px" }}
+          className="my-0 py-0 me-2 hover:underline cursor-pointer"
+        >
+          Reply
+        </small>
+        {isOwner && (
+          <>
+            <small
+              style={{ fontSize: "12px" }}
+              className="my-0 py-0 me-2 hover:underline cursor-pointer text-primary"
+            >
+              Update
+            </small>
+            <small
+              onClick={() => deleteComment()}
+              style={{ fontSize: "12px" }}
+              className="my-0 py-0 me-2 hover:underline cursor-pointer text-danger"
+            >
+              Delete
+            </small>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}

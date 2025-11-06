@@ -14,3 +14,9 @@ export const COMMENTS_CREATE_MUTATION = gql`
     }
   }
 `;
+
+export const COMMENT_DELETE_MUTATION = gql`
+  mutation DeleteComment($id: ID!) {
+    deleteComment(id: $id)
+  }
+`;
