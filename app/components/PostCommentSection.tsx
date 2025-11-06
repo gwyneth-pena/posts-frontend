@@ -46,7 +46,7 @@ export default function PostCommentSection({ id }: { id: string }) {
                   : null
               }
               comment={comment}
-              userMe={userMeData.userMe}
+              userMe={userMeData?.userMe}
               key={comment.id}
               onSuccess={() => {
                 reexecuteQuery({ requestPolicy: "network-only" });

@@ -1,9 +1,12 @@
 import { Button, Field, Stack } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "urql";
-import { COMMENTS_CREATE_MUTATION } from "../graphql/comments.mutations";
+import {
+  COMMENT_UPDATE_MUTATION,
+  COMMENTS_CREATE_MUTATION,
+} from "../graphql/comments.mutations";
 import toast from "react-hot-toast";
 
 type CommentData = {
@@ -14,11 +17,15 @@ const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function CommentForm({
   operation,
-  postId,
+  initialValue = "",
+  postId = "",
+  commentId = "",
   onSuccess,
 }: {
   operation: "Add" | "Update";
-  postId: string;
+  initialValue?: string;
+  postId?: string;
+  commentId?: string;
   onSuccess?: () => void;
 }) {
   const {
@@ -30,9 +37,13 @@ export default function CommentForm({
     formState: { errors },
   } = useForm<CommentData>({
     defaultValues: {
-      text: "",
+      text: initialValue,
     },
   });
+
+  useEffect(() => {
+    setValue("text", initialValue);
+  }, [initialValue, setValue]);
 
   register("text", {
     required: "Text is required.",
@@ -44,15 +55,27 @@ export default function CommentForm({
 
   const text = watch("text");
 
-  const [mutationResult, executeCommentCreate] = useMutation(
+  const [createCommentResult, executeCommentCreate] = useMutation(
     COMMENTS_CREATE_MUTATION
   );
 
+  const [updateCommentResult, executeCommentUpdate] = useMutation(
+    COMMENT_UPDATE_MUTATION
+  );
+
   const onSubmit = async (commentData: CommentData) => {
-    const result = await executeCommentCreate({
-      text: commentData.text,
-      postId: postId,
-    });
+    let result: any;
+    if (operation === "Add") {
+      result = await executeCommentCreate({
+        text: commentData.text,
+        postId: postId,
+      });
+    } else {
+      result = await executeCommentUpdate({
+        id: commentId,
+        text: commentData.text,
+      });
+    }
     if (result.error) {
       window.location.href = "/login";
     } else {
@@ -80,14 +103,13 @@ export default function CommentForm({
           )}{" "}
         </Field.Root>
         <Button
-          marginTop={2}
+          marginTop={1}
           type="submit"
-          size="lg"
-          colorScheme="blue"
+          size="sm"
           width="full"
           rounded="md"
-          bg="reddit.500"
-          loading={mutationResult.fetching}
+          bg={operation === "Add" ? "reddit.500" : "gray.500"}
+          loading={createCommentResult.fetching || updateCommentResult.fetching}
           loadingText="Please wait..."
         >
           {operation} Comment

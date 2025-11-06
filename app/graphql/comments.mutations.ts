@@ -20,3 +20,18 @@ export const COMMENT_DELETE_MUTATION = gql`
     deleteComment(id: $id)
   }
 `;
+
+export const COMMENT_UPDATE_MUTATION = gql`
+  mutation UpdateComment($id: ID!, $text: String!) {
+    updateComment(id: $id, text: $text) {
+      id
+      text
+      createdAt
+      updatedAt
+      user {
+        username
+        email
+      }
+    }
+  }
+`;

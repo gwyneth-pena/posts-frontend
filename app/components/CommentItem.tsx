@@ -4,6 +4,8 @@ import { format } from "date-fns";
 import { useMutation } from "urql";
 import { COMMENT_DELETE_MUTATION } from "../graphql/comments.mutations";
 import toast from "react-hot-toast";
+import CommentForm from "./CommentForm";
+import { useState } from "react";
 
 export default function CommentItem({
   comment,
@@ -17,6 +19,7 @@ export default function CommentItem({
   ref: any;
 }) {
   const isOwner = comment.user.username === userMe?.username;
+  const [toUpdate, setToUpdate] = useState(false);
 
   const [_, executeCommentDelete] = useMutation(COMMENT_DELETE_MUTATION);
 
@@ -34,17 +37,37 @@ export default function CommentItem({
 
   return (
     <div ref={ref} className="bg-gray-100 px-4 py-2 mb-2" key={comment.id}>
-      <small className="text-muted">
+      <small className="text-muted" style={{ fontSize: "12px" }}>
         {comment.user.username} |{"  "}
         {format(new Date(Number(comment.createdAt)), "PPP 'at' p")}
       </small>
-      <div
-        className="mb-0"
-        dangerouslySetInnerHTML={{ __html: comment.text }}
-      ></div>{" "}
+      {toUpdate ? (
+        <>
+          <div className="my-2">
+            <CommentForm
+              initialValue={comment.text}
+              operation="Update"
+              postId={comment.postId}
+              commentId={comment.id}
+              onSuccess={() => {
+                setToUpdate(false);
+                onSuccess?.();
+              }}
+            />
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            style={{ fontSize: "12px" }}
+            className="mb-0"
+            dangerouslySetInnerHTML={{ __html: comment.text }}
+          ></div>{" "}
+        </>
+      )}
       <div className="d-flex">
         <small
-          style={{ fontSize: "12px" }}
+          style={{ fontSize: "11px" }}
           className="my-0 py-0 me-2 hover:underline cursor-pointer"
         >
           Reply
@@ -52,14 +75,15 @@ export default function CommentItem({
         {isOwner && (
           <>
             <small
-              style={{ fontSize: "12px" }}
+              onClick={() => setToUpdate(true)}
+              style={{ fontSize: "11px" }}
               className="my-0 py-0 me-2 hover:underline cursor-pointer text-primary"
             >
               Update
             </small>
             <small
               onClick={() => deleteComment()}
-              style={{ fontSize: "12px" }}
+              style={{ fontSize: "11px" }}
               className="my-0 py-0 me-2 hover:underline cursor-pointer text-danger"
             >
               Delete
