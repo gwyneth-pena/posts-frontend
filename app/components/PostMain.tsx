@@ -6,14 +6,18 @@ import { useQuery } from "urql";
 import PostMenu from "./PostMenu";
 
 export default function PostMain({ id }: { id: string }) {
-  const [{ data: postData }] = useQuery({
+  const [{ data: postData, fetching }] = useQuery({
     query: POSTS_GET_ONE_QUERY,
     variables: { id },
     requestPolicy: "cache-and-network",
   });
 
-  if (!postData?.post) {
+  if (fetching) {
     return <p>Loading...</p>;
+  }
+
+  if (postData?.post == null) {
+    window.location.href = "/";
   }
 
   const post = postData.post;
