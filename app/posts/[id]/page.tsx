@@ -4,6 +4,7 @@ import { POSTS_GET_ONE_QUERY } from "@/app/graphql/posts.query.";
 import { createUrqlClient } from "@/app/lib/urql-server";
 import { Container, Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -18,6 +19,10 @@ export async function generateMetadata({
   const res = await client
     .query(POSTS_GET_ONE_QUERY, { id: postId })
     .toPromise();
+
+  if (!res.data?.post) {
+    redirect("/");
+  }
 
   const title = res.data?.post?.title ?? "Post";
   const username = res.data?.post?.user?.username ?? "User";
