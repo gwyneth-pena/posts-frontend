@@ -7,7 +7,13 @@ import { useMutation } from "urql";
 import { POSTS_DELETE_MUTATION } from "../graphql/posts.mutation";
 import toast from "react-hot-toast";
 
-export default function PostMenu({ post }: any) {
+export default function PostMenu({
+  post,
+  fromSinglePost = false,
+}: {
+  post: any;
+  fromSinglePost?: boolean;
+}) {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [_, executePostDelete] = useMutation(POSTS_DELETE_MUTATION);
   const handleConfirm = async () => {
@@ -44,7 +50,10 @@ export default function PostMenu({ post }: any) {
         </button>
         <ul className="dropdown-menu dropdown-menu-end">
           <li>
-            <a className="dropdown-item" href={`/posts/${post?.id}/edit`}>
+            <a
+              className="dropdown-item"
+              href={`/posts/${post?.id}/edit?single=${fromSinglePost}`}
+            >
               Edit
             </a>
           </li>

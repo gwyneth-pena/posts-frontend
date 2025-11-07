@@ -22,7 +22,7 @@ export default function CommentForm({
   commentId = "",
   onSuccess,
 }: {
-  operation: "Add" | "Update";
+  operation: "Add" | "Update" | "Reply";
   initialValue?: string;
   postId?: string;
   commentId?: string;
@@ -70,17 +70,25 @@ export default function CommentForm({
         text: commentData.text,
         postId: postId,
       });
-    } else {
+    } else if (operation === "Update") {
       result = await executeCommentUpdate({
         id: commentId,
         text: commentData.text,
+      });
+    } else if (operation === "Reply") {
+      result = await executeCommentCreate({
+        text: commentData.text,
+        postId: postId,
+        parentId: commentId,
       });
     }
     if (result.error) {
       window.location.href = "/login";
     } else {
       toast.success(
-        `Comment ${operation === "Add" ? "added" : "updated"} successfully.`
+        `Comment ${
+          operation === "Add" || operation == "Reply" ? "added" : "updated"
+        } successfully.`
       );
       reset();
       onSuccess?.();
@@ -112,7 +120,7 @@ export default function CommentForm({
           loading={createCommentResult.fetching || updateCommentResult.fetching}
           loadingText="Please wait..."
         >
-          {operation} Comment
+          {operation == "Reply" ? "Reply" : `${operation} Comment`}
         </Button>
       </Stack>
     </form>

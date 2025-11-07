@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import { POSTS_GET_ONE_QUERY } from "../graphql/posts.query.";
 import { useQuery } from "urql";
-import { IconPencil } from "@tabler/icons-react";
+import PostMenu from "./PostMenu";
 
 export default function PostMain({ id }: { id: string }) {
   const [{ data: postData }] = useQuery({
@@ -23,12 +23,9 @@ export default function PostMain({ id }: { id: string }) {
       <div className="d-flex justify-content-center align-items-center">
         <h2 className="text-center me-2">{post.title}</h2>
         {post.isOwner && (
-          <a
-            href={`/posts/${post.id}/edit?single=true`}
-            className="btn btn-link p-0"
-          >
-            <IconPencil size={20} />
-          </a>
+          <>
+            <PostMenu post={post} fromSinglePost={true} />
+          </>
         )}
       </div>
 

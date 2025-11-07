@@ -11,6 +11,19 @@ export const COMMENTS_BY_POST_QUERY = gql`
         username
         email
       }
+      post{
+        id
+      }
+      children {
+        id
+        text
+        createdAt
+        updatedAt
+        user {
+          username
+          email
+        }
+      }
     }
   }
 `;
