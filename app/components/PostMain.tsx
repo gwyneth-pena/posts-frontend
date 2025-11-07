@@ -6,23 +6,19 @@ import { useQuery } from "urql";
 import PostMenu from "./PostMenu";
 
 export default function PostMain({ id }: { id: string }) {
-  const [{ data: postData, fetching }] = useQuery({
+  const [{ data: postData }] = useQuery({
     query: POSTS_GET_ONE_QUERY,
     variables: { id },
     requestPolicy: "cache-and-network",
   });
 
-  if (fetching) {
+  if (!postData?.post) {
     return <p>Loading...</p>;
-  }
-
-  if (postData?.post == null) {
-    window.location.href = "/";
   }
 
   const post = postData.post;
 
-  return post ? (
+  return (
     <>
       <div className="d-flex justify-content-center align-items-center">
         <h2 className="text-center me-2">{post.title}</h2>
@@ -44,5 +40,5 @@ export default function PostMain({ id }: { id: string }) {
         Date Posted: {format(new Date(Number(post.createdAt)), "PPP 'at' p")}
       </small>
     </>
-  ) : null;
+  );
 }
