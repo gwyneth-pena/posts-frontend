@@ -9,7 +9,7 @@ import {
 } from "@tabler/icons-react";
 import { Box, Flex } from "@chakra-ui/react";
 import { format } from "date-fns";
-import { useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useMutation } from "urql";
 import {
   VOTE_CREATE_MUTATION,
@@ -27,30 +27,34 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
   const [, updateVoteByPost] = useMutation(VOTE_UPDATE_BY_POST_ID_MUTATION);
   const [, deleteVoteByPost] = useMutation(VOTE_DELETE_BY_POST_ID_MUTATION);
 
+  const [userVote, setUserVote] = useState(post.userVote);
+  const [likeCount, setLikeCount] = useState(post.likeCount || 0);
+  const [dislikeCount, setDislikeCount] = useState(post.dislikeCount || 0);
+
   const likeOrDislikePost = useCallback(
     async (value: number) => {
       if (!user) {
         router.push("/login");
         return;
       }
-      if (post.userVote) {
+      if (userVote) {
         await updateVoteByPost({ value, postId: post.id });
         if (value === 1) {
-          post.likeCount = post.likeCount + 1;
-          post.dislikeCount = post.dislikeCount - 1;
+          setLikeCount((prev: any) => prev + 1);
+          setDislikeCount((prev: any) => prev - 1);
         } else {
-          post.likeCount = post.likeCount - 1;
-          post.dislikeCount = post.dislikeCount + 1;
+          setLikeCount((prev: any) => prev - 1);
+          setDislikeCount((prev: any) => prev + 1);
         }
-      } else if (!post.userVote) {
+      } else {
         await vote({ value, postId: post.id });
         value === 1
-          ? (post.likeCount = post.likeCount + 1)
-          : (post.dislikeCount = post.dislikeCount + 1);
+          ? setLikeCount((prev: any) => prev + 1)
+          : setDislikeCount((prev: any) => prev + 1);
       }
-      post.userVote = value;
+      setUserVote(value);
     },
-    [post.id, vote]
+    [userVote, post.id, vote, updateVoteByPost, router, user]
   );
 
   const removeVote = useCallback(
@@ -60,15 +64,16 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
         return;
       }
       await deleteVoteByPost({ postId: post.id });
-      post.userVote = null;
-      value === 1 ? post.likeCount-- : post.dislikeCount--;
+      setUserVote(null);
+      value === 1
+        ? setLikeCount((prev: any) => prev - 1)
+        : setDislikeCount((prev: any) => prev - 1);
     },
-    [post.id, vote]
+    [post.id, deleteVoteByPost, router, user]
   );
 
   return (
     <Box
-      key={post.id}
       w={["100%", "90%", "600px"]}
       bg="white"
       p={6}
@@ -105,7 +110,7 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
           {format(new Date(Number(post.createdAt)), "PPP 'at' p")}
         </small>
         <div className="d-flex">
-          {post.userVote === 1 ? (
+          {userVote === 1 ? (
             <IconThumbUpFilled
               onClick={() => removeVote(1)}
               size={20}
@@ -120,9 +125,9 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
               onClick={() => likeOrDislikePost(1)}
             />
           )}
-          <small className="me-3">{formatNumber(post.likeCount || 0)}</small>
+          <small className="me-3">{formatNumber(likeCount)}</small>
 
-          {post.userVote === -1 ? (
+          {userVote === -1 ? (
             <IconThumbDownFilled
               onClick={() => removeVote(-1)}
               size={20}
@@ -137,7 +142,7 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
               onClick={() => likeOrDislikePost(-1)}
             />
           )}
-          <small className="me-3">{formatNumber(post.dislikeCount || 0)}</small>
+          <small className="me-3">{formatNumber(dislikeCount)}</small>
 
           <IconMessageCircle
             size={20}
