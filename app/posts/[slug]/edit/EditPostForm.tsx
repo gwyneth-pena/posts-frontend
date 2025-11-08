@@ -19,14 +19,14 @@ import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 
-type PostpostData = {
+type PostData = {
   title: string;
   text: string;
 };
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
-export default function EditPostForm({ id }: any) {
+export default function EditPostForm({ slug }: any) {
   const [{ data: userpostData }] = useQuery({
     query: USER_ME_QUERY,
     requestPolicy: "cache-and-network",
@@ -34,7 +34,7 @@ export default function EditPostForm({ id }: any) {
 
   const [{ data: postData }] = useQuery({
     query: POSTS_GET_ONE_QUERY,
-    variables: { id: id },
+    variables: { slug: slug },
     requestPolicy: "cache-and-network",
   });
 
@@ -48,7 +48,7 @@ export default function EditPostForm({ id }: any) {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<PostpostData>({
+  } = useForm<PostData>({
     defaultValues: {
       title: "",
       text: "",
@@ -74,11 +74,11 @@ export default function EditPostForm({ id }: any) {
     }
   }, [postData, reset]);
 
-  const onSubmit = async (postData: PostpostData) => {
+  const onSubmit = async (postDataSubmit: PostData) => {
     const result = await executePostEdit({
-      id: id,
-      title: postData.title,
-      text: postData.text,
+      id: postData.post.id,
+      title: postDataSubmit.title,
+      text: postDataSubmit.text,
     });
     if (result.error) {
       setSubmitFeedback({
@@ -92,7 +92,7 @@ export default function EditPostForm({ id }: any) {
       });
       reset();
       if (isSingle) {
-        window.location.href = `/posts/${id}`;
+        window.location.href = `/posts/${postData.post.slug}`;
       } else {
         window.location.href = "/";
       }

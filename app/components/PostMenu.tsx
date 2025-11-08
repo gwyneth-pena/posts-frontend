@@ -52,7 +52,7 @@ export default function PostMenu({
           <li>
             <a
               className="dropdown-item"
-              href={`/posts/${post?.id}/edit?single=${fromSinglePost}`}
+              href={`/posts/${post?.slug}/edit?single=${fromSinglePost}`}
             >
               Edit
             </a>

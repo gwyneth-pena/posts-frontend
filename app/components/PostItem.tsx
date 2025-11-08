@@ -79,7 +79,7 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
       <Flex justify="space-between" align="start" mb={2}>
         <h4
           style={{ fontWeight: "600" }}
-          onClick={() => router.push(`/posts/${post.id}`)}
+          onClick={() => router.push(`/posts/${post.slug}`)}
           className="cursor-pointer hover:underline"
         >
           {post.title}
@@ -143,7 +143,7 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
             size={20}
             stroke={1.5}
             className="me-1 cursor-pointer"
-            onClick={() => router.push(`/posts/${post.id}`)}
+            onClick={() => router.push(`/posts/${post.slug}`)}
           />
           <small>{formatNumber(post.commentCount || 0)}</small>
         </div>

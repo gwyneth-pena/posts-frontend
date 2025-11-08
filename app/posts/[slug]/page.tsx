@@ -9,15 +9,15 @@ import { redirect } from "next/navigation";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const postId = resolvedParams.id;
+  const postSlug = resolvedParams.slug;
 
   const { client } = await createUrqlClient();
 
   const res = await client
-    .query(POSTS_GET_ONE_QUERY, { id: postId })
+    .query(POSTS_GET_ONE_QUERY, { slug: postSlug })
     .toPromise();
 
   if (!res.data?.post) {
@@ -35,7 +35,7 @@ export async function generateMetadata({
 
 export default async function Post({ params }: any) {
   const data = await params;
-  const id = data?.id ?? null;
+  const slug = data?.slug ?? null;
 
   return (
     <Flex minH="80vh" bg="gray.100" justifyContent="center">
@@ -46,9 +46,9 @@ export default async function Post({ params }: any) {
         px={[4, 8, 12, 20]}
         mx={[2, 4, 10, 20]}
       >
-        <PostMain id={id} />
+        <PostMain slug={slug} />
         <div className="mt-4">
-          <PostCommentSection id={id} />
+          <PostCommentSection slug={slug} />
         </div>
       </Container>
     </Flex>

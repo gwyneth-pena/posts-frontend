@@ -5,10 +5,10 @@ import { POSTS_GET_ONE_QUERY } from "../graphql/posts.query.";
 import { useQuery } from "urql";
 import PostMenu from "./PostMenu";
 
-export default function PostMain({ id }: { id: string }) {
+export default function PostMain({ slug }: { slug: string }) {
   const [{ data: postData }] = useQuery({
     query: POSTS_GET_ONE_QUERY,
-    variables: { id },
+    variables: { slug },
     requestPolicy: "cache-and-network",
   });
 

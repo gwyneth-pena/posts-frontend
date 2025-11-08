@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default async function EditPost({ params }: any) {
   const data = await params;
-  const id = data?.id ?? null;
-  
+  const slug = data?.slug ?? null;
+
   return (
     <Flex
       minH={"80vh"}
@@ -26,7 +26,7 @@ export default async function EditPost({ params }: any) {
           borderRadius="md"
           boxShadow="md"
         >
-          <EditPostForm id={id} />
+          <EditPostForm slug={slug} />
         </Box>
       </Container>
     </Flex>

@@ -8,12 +8,13 @@ export const POSTS_QUERY = gql`
       text
       createdAt
       updatedAt
+      slug
       user {
         username
         email
-      },
+      }
       commentCount
-      likeCount 
+      likeCount
       dislikeCount
       userVote
       isOwner
@@ -22,11 +23,12 @@ export const POSTS_QUERY = gql`
 `;
 
 export const POSTS_GET_ONE_QUERY = gql`
-  query Post($id: ID!) {
-    post(id: $id) {
+  query Post($id: ID, $slug: String!) {
+    post(id: $id, slug: $slug) {
       id
       title
       text
+      slug
       createdAt
       updatedAt
       user {
