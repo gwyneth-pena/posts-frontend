@@ -1,8 +1,8 @@
 import { gql } from "urql";
 
 export const POSTS_QUERY = gql`
-  query Posts {
-    posts {
+  query Posts($limit: Int, $offset: Int) {
+    posts(limit: $limit, offset: $offset) {
       id
       title
       text
@@ -19,6 +19,7 @@ export const POSTS_QUERY = gql`
       userVote
       isOwner
     }
+    totalPosts
   }
 `;
 

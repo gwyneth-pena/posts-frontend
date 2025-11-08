@@ -31,7 +31,7 @@ export default function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm px-4">
       <div className="container-fluid">
         {/* Logo */}
-        <Link href="/" className="navbar-brand fw-bold text-danger">
+        <Link href="/?page=1" className="navbar-brand fw-bold text-danger">
           MyPosts
         </Link>
 
