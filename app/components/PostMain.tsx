@@ -24,7 +24,7 @@ export default function PostMain({ slug }: { slug: string }) {
         <h2 className="text-center me-2">{post.title}</h2>
         {post.isOwner && (
           <>
-            <PostMenu post={post} fromSinglePost={true} />
+            <PostMenu post={post} isFromSinglePost={true} />
           </>
         )}
       </div>

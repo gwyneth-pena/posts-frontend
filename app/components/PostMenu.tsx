@@ -9,10 +9,12 @@ import toast from "react-hot-toast";
 
 export default function PostMenu({
   post,
-  fromSinglePost = false,
+  fromPage,
+  isFromSinglePost = false,
 }: {
   post: any;
-  fromSinglePost?: boolean;
+  fromPage?: number;
+  isFromSinglePost?: boolean;
 }) {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [_, executePostDelete] = useMutation(POSTS_DELETE_MUTATION);
@@ -52,7 +54,9 @@ export default function PostMenu({
           <li>
             <a
               className="dropdown-item"
-              href={`/posts/${post?.slug}/edit?single=${fromSinglePost}`}
+              href={`/posts/${post?.slug}/edit?single=${isFromSinglePost}${
+                fromPage ? `&fromPage=${fromPage}` : ""
+              }`}
             >
               Edit
             </a>

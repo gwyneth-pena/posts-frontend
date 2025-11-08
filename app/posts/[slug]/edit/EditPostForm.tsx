@@ -40,6 +40,7 @@ export default function EditPostForm({ slug }: any) {
 
   const searchParams = useSearchParams();
   const isSingle = searchParams.get("single") === "true";
+  const fromPage = searchParams.get("fromPage");
 
   const {
     register,
@@ -94,7 +95,7 @@ export default function EditPostForm({ slug }: any) {
       if (isSingle) {
         window.location.href = `/posts/${postData.post.slug}`;
       } else {
-        window.location.href = "/";
+        window.location.href = `${fromPage ? `/?page=${fromPage}` : "/"}`;
       }
     }
   };

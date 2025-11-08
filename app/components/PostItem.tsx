@@ -20,7 +20,15 @@ import PostMenu from "./PostMenu";
 import { useRouter } from "next/navigation";
 import { formatNumber } from "../utils/numbers";
 
-export default function PostItem({ post, user }: { post: any; user: any }) {
+export default function PostItem({
+  post,
+  user,
+  fromPage,
+}: {
+  post: any;
+  user: any;
+  fromPage?: number;
+}) {
   const router = useRouter();
 
   const [, vote] = useMutation(VOTE_CREATE_MUTATION);
@@ -89,7 +97,7 @@ export default function PostItem({ post, user }: { post: any; user: any }) {
         >
           {post.title}
         </h4>
-        <PostMenu post={post} />
+        <PostMenu post={post} fromPage={fromPage} />
       </Flex>
 
       <small className="text-muted">{post.user.username}</small>
