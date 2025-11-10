@@ -149,7 +149,7 @@ export default async function Profile({
               Liked Posts
             </Text>
             {likedPosts.data?.posts?.length === 0 && (
-              <Text color="gray.500">No posts yet.</Text>
+              <Text color="gray.500">No liked posts yet.</Text>
             )}
             {likedPosts.data?.posts?.map((post: any) => (
               <Box key={post.id} mb={3}>
