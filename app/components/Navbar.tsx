@@ -59,7 +59,7 @@ export default function Navbar() {
                 <Text py={0} my={0} fontSize="14px" whiteSpace="nowrap">
                   Hello,{" "}
                   <Link
-                    href="/profile"
+                    href={`/profile/${data.userMe.username?.toLowerCase()}`}
                     className="text-decoration-none"
                     passHref
                   >

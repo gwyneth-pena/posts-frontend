@@ -1,8 +1,18 @@
 import { gql } from "urql";
 
 export const POSTS_QUERY = gql`
-  query Posts($limit: Int, $offset: Int) {
-    posts(limit: $limit, offset: $offset) {
+  query Posts(
+    $likedByUsername: String
+    $username: String
+    $limit: Int
+    $offset: Int
+  ) {
+    posts(
+      likedByUsername: $likedByUsername
+      username: $username
+      limit: $limit
+      offset: $offset
+    ) {
       id
       title
       text
@@ -19,7 +29,7 @@ export const POSTS_QUERY = gql`
       userVote
       isOwner
     }
-    totalPosts
+    totalPosts(username: $username)
   }
 `;
 

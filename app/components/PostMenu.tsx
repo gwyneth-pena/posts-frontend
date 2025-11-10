@@ -74,7 +74,7 @@ export default function PostMenu({
       {showConfirmationModal && (
         <ConfirmationModal
           title="Delete Post"
-          message="Are you sure you want to delete this post?"
+          message={`Are you sure you want to delete this post (${post?.title})?`}
           confirmText="Delete"
           cancelText="Cancel"
           show={showConfirmationModal}

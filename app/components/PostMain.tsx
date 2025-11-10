@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { POSTS_GET_ONE_QUERY } from "../graphql/posts.query.";
 import { useQuery } from "urql";
 import PostMenu from "./PostMenu";
+import { Link } from "@chakra-ui/react";
 
 export default function PostMain({ slug }: { slug: string }) {
   const [{ data: postData }] = useQuery({
@@ -29,7 +30,15 @@ export default function PostMain({ slug }: { slug: string }) {
         )}
       </div>
 
-      <p className="text-muted text-center">{post.user.username}</p>
+      <p className="text-muted text-center">
+        <Link
+          color="gray.500"
+          className="text-decoration-none"
+          href={`/profile/${post.user.username?.toLowerCase()}`}
+        >
+          {post.user.username}
+        </Link>
+      </p>
 
       <div
         className="mt-5 mb-3"

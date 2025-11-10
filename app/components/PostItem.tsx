@@ -7,7 +7,7 @@ import {
   IconThumbUp,
   IconThumbUpFilled,
 } from "@tabler/icons-react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Link } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { useState, useCallback } from "react";
 import { useMutation } from "urql";
@@ -100,7 +100,12 @@ export default function PostItem({
         <PostMenu post={post} fromPage={fromPage} />
       </Flex>
 
-      <small className="text-muted">{post.user.username}</small>
+      <Link
+        color="gray.500"
+        href={`/profile/${post.user.username?.toLowerCase()}`}
+      >
+        <small className="text-muted">{post.user.username}</small>
+      </Link>
       <p
         className="mt-3"
         style={{
