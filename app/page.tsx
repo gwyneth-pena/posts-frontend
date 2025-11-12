@@ -1,4 +1,4 @@
-import { Button, Container, Flex } from "@chakra-ui/react";
+import { Button, Container, Flex, Text } from "@chakra-ui/react";
 import { POSTS_QUERY } from "./graphql/posts.query.";
 import Link from "next/link";
 import { Metadata } from "next";
@@ -69,9 +69,16 @@ export default async function Home({ searchParams }: any) {
             />
           ))}
         </Container>
-        <Flex justifyContent={"center"} my={10}>
-          <PaginationWrapped totalPages={totalPages} />
-        </Flex>
+        {totalPages === 0 && (
+          <Flex justifyContent={"center"} alignItems={"center"}>
+            No posts found.
+          </Flex>
+        )}
+        {totalPages > 0 && (
+          <Flex justifyContent={"center"} my={10}>
+            <PaginationWrapped totalPages={totalPages} />
+          </Flex>
+        )}
       </Flex>
     </>
   );
