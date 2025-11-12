@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { POSTS_GET_ONE_QUERY } from "../graphql/posts.query.";
+import { POSTS_GET_ONE_QUERY } from "../graphql/posts.query";
 import { useQuery } from "urql";
 import PostMenu from "./PostMenu";
 import { Link } from "@chakra-ui/react";

@@ -8,7 +8,7 @@ import { useRef } from "react";
 import CommentForm from "./CommentForm";
 import CommentItem from "./CommentItem";
 import { USER_ME_QUERY } from "../graphql/users.query";
-import { POSTS_GET_ONE_QUERY } from "../graphql/posts.query.";
+import { POSTS_GET_ONE_QUERY } from "../graphql/posts.query";
 
 export default function PostCommentSection({ slug }: { slug: string }) {
   const [{ data: userMeData }] = useQuery({

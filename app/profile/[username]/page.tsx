@@ -1,4 +1,4 @@
-import { POSTS_QUERY } from "@/app/graphql/posts.query.";
+import { POSTS_QUERY } from "@/app/graphql/posts.query";
 import { USER_QUERY } from "@/app/graphql/users.query";
 import { createUrqlClient } from "@/app/lib/urql-server";
 import { Box, Container, Flex, HStack, Link, Text } from "@chakra-ui/react";

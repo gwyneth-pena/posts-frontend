@@ -1,7 +1,7 @@
 "use client";
 
 import { POSTS_UPDATE_MUTATION } from "@/app/graphql/posts.mutation";
-import { POSTS_GET_ONE_QUERY } from "@/app/graphql/posts.query.";
+import { POSTS_GET_ONE_QUERY } from "@/app/graphql/posts.query";
 import { USER_ME_QUERY } from "@/app/graphql/users.query";
 import {
   Alert,

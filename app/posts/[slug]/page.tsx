@@ -1,6 +1,6 @@
 import PostCommentSection from "@/app/components/PostCommentSection";
 import PostMain from "@/app/components/PostMain";
-import { POSTS_GET_ONE_QUERY } from "@/app/graphql/posts.query.";
+import { POSTS_GET_ONE_QUERY } from "@/app/graphql/posts.query";
 import { createUrqlClient } from "@/app/lib/urql-server";
 import { Container, Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
