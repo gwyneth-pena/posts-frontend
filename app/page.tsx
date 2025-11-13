@@ -44,7 +44,7 @@ export default async function Home({ searchParams }: any) {
       }
     )
     .toPromise();
-  console.log(user);
+
   const totalPosts = posts.data?.totalPosts || 0;
   const totalPages = Math.ceil(totalPosts / limit);
 
@@ -52,12 +52,7 @@ export default async function Home({ searchParams }: any) {
     <>
       <Flex minH="80vh" bg="gray.100" flexDirection={"column"}>
         <Container maxW="100%" bg="gray.100" centerContent py={10} px={8}>
-          <Flex
-            justify="end"
-            align="center"
-            mb={6}
-            width={["100%"]}
-          >
+          <Flex justify="end" align="center" mb={6} width={["100%"]}>
             <ButtonLink href="/posts/create"> Share Your Thoughts </ButtonLink>
           </Flex>
 
