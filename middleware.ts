@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { createUrqlClient } from "./app/lib/urql-server";
 import { USER_ME_QUERY } from "./app/graphql/users.query";
+import { cacheExchange, createClient, fetchExchange } from "urql";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -15,8 +15,17 @@ export async function middleware(request: NextRequest) {
   }
 
   let loggedIn = false;
-
-  const { client }: any = await createUrqlClient();
+  const cookieHeader = request.headers.get("cookie") || "";
+  const client = createClient({
+    url: process.env.NEXT_PUBLIC_GRAPH_API!,
+    fetchOptions: {
+      credentials: "include",
+      headers: {
+        cookie: cookieHeader,
+      },
+    },
+    exchanges: [cacheExchange, fetchExchange],
+  });
   const user = await client
     .query(USER_ME_QUERY, {
       requestPolicy: "cache-and-network",
@@ -24,7 +33,7 @@ export async function middleware(request: NextRequest) {
     .toPromise();
 
   loggedIn = user?.data?.userMe !== null;
-  console.log(loggedIn, user);
+  console.log(loggedIn, user, cookieHeader);
   if (
     (loggedIn && pathname.toUpperCase()?.startsWith("/LOGIN")) ||
     (loggedIn && pathname.toUpperCase()?.startsWith("/REGISTER")) ||
