@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
+  console.log("test")
+  console.log(request.cookies, "TEST");
   const sessionId =
     request.cookies.get("session_id")?.value ||
     request.cookies.get("session_id");
