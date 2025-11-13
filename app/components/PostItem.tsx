@@ -45,8 +45,22 @@ export default function PostItem({
         router.push("/login");
         return;
       }
-      if (userVote) {
-        await updateVoteByPost({ value, postId: post.id });
+
+      if (userVote === value) {
+        await deleteVoteByPost({ postId: post.id });
+        setUserVote(null);
+        value === 1
+          ? setLikeCount((prev: any) => prev - 1)
+          : setDislikeCount((prev: any) => prev - 1);
+      } else if (userVote === null) {
+        await vote({ postId: post.id, value });
+        setUserVote(value);
+        value === 1
+          ? setLikeCount((prev: any) => prev + 1)
+          : setDislikeCount((prev: any) => prev + 1);
+      } else {
+        await updateVoteByPost({ postId: post.id, value });
+        setUserVote(value);
         if (value === 1) {
           setLikeCount((prev: any) => prev + 1);
           setDislikeCount((prev: any) => prev - 1);
@@ -54,15 +68,9 @@ export default function PostItem({
           setLikeCount((prev: any) => prev - 1);
           setDislikeCount((prev: any) => prev + 1);
         }
-      } else {
-        await vote({ value, postId: post.id });
-        value === 1
-          ? setLikeCount((prev: any) => prev + 1)
-          : setDislikeCount((prev: any) => prev + 1);
       }
-      setUserVote(value);
     },
-    [userVote, post.id, vote, updateVoteByPost, router, user]
+    [userVote, post.id, vote, updateVoteByPost, deleteVoteByPost, router, user]
   );
 
   const removeVote = useCallback(
