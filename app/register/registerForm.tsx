@@ -14,8 +14,6 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "urql";
 import { USER_CREATE_MUTATION } from "../graphql/users.mutation";
 import { useState } from "react";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 type RegisterData = {
   username: string;
@@ -24,13 +22,7 @@ type RegisterData = {
   email?: string;
 };
 
-export default async function RegisterForm() {
-  const sessionCookie = (await cookies()).get("session_id")?.value;
-
-  if (sessionCookie) {
-    redirect("/");
-  }
-
+export default function RegisterForm() {
   const {
     register,
     handleSubmit,
