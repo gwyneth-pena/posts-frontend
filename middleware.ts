@@ -20,6 +20,7 @@ export async function middleware(request: NextRequest) {
       cookie: request.headers.get("cookie") || "",
     },
   });
+  console.log(await res.json());
 
   let loggedIn = false;
   const cookieHeader = request.headers.get("cookie") || "";
