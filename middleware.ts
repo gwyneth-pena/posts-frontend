@@ -13,12 +13,13 @@ export async function middleware(request: NextRequest) {
   ) {
     return NextResponse.next();
   }
-
-  const res = await fetch("/api/check-session", {
-    credentials: "include", // ensures HttpOnly cookies are sent
+  const url = new URL("/api/check-session", request.url); // builds full absolute URL
+  const res = await fetch(url.toString(), {
+    credentials: "include",
+    headers: {
+      cookie: request.headers.get("cookie") || "",
+    },
   });
-  const data = await res.json();
-  console.log(data.loggedIn, 'test 1');
 
   let loggedIn = false;
   const cookieHeader = request.headers.get("cookie") || "";
