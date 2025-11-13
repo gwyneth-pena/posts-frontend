@@ -57,8 +57,7 @@ export default function LoginForm({ next }: any) {
         type: "success",
       });
       reset();
-      console.log(result)
-      // window.location.href = next ?? "/";
+      window.location.href = next ?? "/";
     }
   };
 
