@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Login({ searchParams }: any) {
+  console.log(await cookies());
   const sessionCookie = (await cookies()).get("session_id");
   console.log(sessionCookie);
   if (sessionCookie) {
