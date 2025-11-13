@@ -19,17 +19,17 @@ import {
 import PostMenu from "./PostMenu";
 import { useRouter } from "next/navigation";
 import { formatNumber } from "../utils/numbers";
+import { useUser } from "../providers";
 
 export default function PostItem({
   post,
-  user,
   fromPage,
 }: {
   post: any;
-  user: any;
   fromPage?: number;
 }) {
   const router = useRouter();
+  const user = useUser();
 
   const [, vote] = useMutation(VOTE_CREATE_MUTATION);
   const [, updateVoteByPost] = useMutation(VOTE_UPDATE_BY_POST_ID_MUTATION);

@@ -58,7 +58,6 @@ export default async function Home({ searchParams }: any) {
 
           {posts.data?.posts.map((post: any) => (
             <PostItem
-              user={user?.data?.userMe}
               key={post.id}
               post={post}
               fromPage={currentPage}

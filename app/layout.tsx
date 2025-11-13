@@ -2,7 +2,7 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ChakraProviderWrapper, UrqlProvider } from "./providers";
+import { ChakraProviderWrapper, UrqlProvider, UserProvider } from "./providers";
 import Navbar from "./components/Navbar";
 import Script from "next/script";
 import Footer from "./components/Footer";
@@ -31,10 +31,12 @@ export default function RootLayout({
       >
         <ChakraProviderWrapper>
           <UrqlProvider>
-            <Navbar />
-            {children}
-            <Footer />
-            <Toaster position="top-right" />
+            <UserProvider>
+              <Navbar />
+              {children}
+              <Footer />
+              <Toaster position="top-right" />
+            </UserProvider>
           </UrqlProvider>
         </ChakraProviderWrapper>
 
