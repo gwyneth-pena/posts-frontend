@@ -54,7 +54,13 @@ export default async function Home({ searchParams }: any) {
       <Flex minH="80vh" bg="gray.100" flexDirection={"column"}>
         <Container maxW="100%" bg="gray.100" centerContent py={10} px={8}>
           <Link className="ms-auto mb-4" href="/posts/create">
-            <Button bg="reddit.500" color="white" rounded="md" ms="auto">
+            <Button
+              as="span"
+              bg="reddit.500"
+              color="white"
+              rounded="md"
+              ms="auto"
+            >
               <IconMessageCircle size={20} stroke={2} />
               Share Your Thoughts
             </Button>
