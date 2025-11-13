@@ -13,24 +13,12 @@ export async function middleware(request: NextRequest) {
   ) {
     return NextResponse.next();
   }
-  const url = new URL("/api/check-session", request.url); // builds full absolute URL
-  const res = await fetch(url.toString(), {
-    credentials: "include",
-    headers: {
-      cookie: request.headers.get("cookie") || "",
-    },
-  });
-  console.log(await res.json());
 
   let loggedIn = false;
-  const cookieHeader = request.headers.get("cookie") || "";
   const client = createClient({
     url: process.env.NEXT_PUBLIC_GRAPH_API!,
     fetchOptions: {
       credentials: "include",
-      headers: {
-        cookie: cookieHeader,
-      },
     },
     exchanges: [cacheExchange, fetchExchange],
   });
@@ -41,7 +29,7 @@ export async function middleware(request: NextRequest) {
     .toPromise();
 
   loggedIn = user?.data?.userMe !== null;
-  console.log(loggedIn, user, cookieHeader, request.headers);
+  console.log(loggedIn, user);
   if (
     (loggedIn && pathname.toUpperCase()?.startsWith("/LOGIN")) ||
     (loggedIn && pathname.toUpperCase()?.startsWith("/REGISTER")) ||
