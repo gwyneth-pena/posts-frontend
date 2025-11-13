@@ -1,12 +1,12 @@
-import { Button, Container, Flex } from "@chakra-ui/react";
+import { Container, Flex } from "@chakra-ui/react";
 import { POSTS_QUERY } from "./graphql/posts.query";
-import Link from "next/link";
 import { Metadata } from "next";
 import { IconMessageCircle } from "@tabler/icons-react";
 import { createUrqlClient } from "./lib/urql-server";
 import PostItem from "./components/PostItem";
 import { USER_ME_QUERY } from "./graphql/users.query";
 import PaginationWrapped from "./components/PaginationWrapped";
+import ButtonLink from "./components/ButtonLink";
 
 export const metadata: Metadata = {
   title: "MyPosts",
@@ -53,18 +53,14 @@ export default async function Home({ searchParams }: any) {
     <>
       <Flex minH="80vh" bg="gray.100" flexDirection={"column"}>
         <Container maxW="100%" bg="gray.100" centerContent py={10} px={8}>
-          <Link className="ms-auto mb-4" href="/posts/create">
-            <Button
-              as="span"
-              bg="reddit.500"
-              color="white"
-              rounded="md"
-              ms="auto"
-            >
-              <IconMessageCircle size={20} stroke={2} />
-              Share Your Thoughts
-            </Button>
-          </Link>
+          <Flex
+            justify="end"
+            align="center"
+            mb={6}
+            width={["100%", "90%", "600px"]}
+          >
+            <ButtonLink href="/posts/create"> Share Your Thoughts </ButtonLink>
+          </Flex>
 
           {posts.data?.posts.map((post: any) => (
             <PostItem
