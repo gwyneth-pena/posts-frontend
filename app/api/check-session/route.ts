@@ -1,3 +1,4 @@
+import { console } from "inspector";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -10,9 +11,10 @@ export async function GET(req: Request) {
       .map(([key, ...vals]) => [key, vals.join("=")])
   );
 
+  console.log(cookies);
   const sessionId = cookies["session_id"];
 
   const loggedIn = Boolean(sessionId);
-
+  console.log(loggedIn);
   return NextResponse.json({ loggedIn });
 }
