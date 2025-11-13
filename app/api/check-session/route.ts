@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   const cookieHeader = req.headers.get("cookie") || "";
-
+  console.log(cookieHeader);
   const cookies = Object.fromEntries(
     cookieHeader
       .split(";")
