@@ -23,7 +23,8 @@ export async function middleware(request: NextRequest) {
     })
     .toPromise();
 
-  loggedIn = user.data?.userMe?.username !== null;
+  loggedIn = user?.data?.userMe !== null;
+
   if (
     (loggedIn && pathname.toUpperCase()?.startsWith("/LOGIN")) ||
     (loggedIn && pathname.toUpperCase()?.startsWith("/REGISTER")) ||
