@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default async function Login({ searchParams }: any) {
   const sessionCookie = (await cookies()).get("session_id")?.value;
-
+  console.log(sessionCookie);
   if (sessionCookie) {
     redirect("/");
   }
