@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { createUrqlClient } from "./app/lib/urql-server";
+import { USER_ME_QUERY } from "./app/graphql/users.query";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  console.log(request.cookies, "TEST");
+
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon.ico") ||
@@ -14,25 +16,14 @@ export async function middleware(request: NextRequest) {
 
   let loggedIn = false;
 
-  try {
-    const apiRes = await fetch(`${request.nextUrl.origin}/api/check-session`, {
-      headers: {
-        cookie: request.headers.get("cookie") || "",
-      },
-      credentials: "include",
-    });
+  const { client }: any = await createUrqlClient();
+  const user = await client
+    .query(USER_ME_QUERY, {
+      requestPolicy: "cache-and-network",
+    })
+    .toPromise();
 
-    if (apiRes.ok) {
-      const contentType = apiRes.headers.get("content-type") || "";
-      if (contentType.includes("application/json")) {
-        const data = await apiRes.json();
-        loggedIn = Boolean(data?.loggedIn);
-      }
-    }
-  } catch (err) {
-    console.error("Middleware error checking session:", err);
-  }
-
+  loggedIn = user.data?.userMe?.username !== null;
   if (
     (loggedIn && pathname.toUpperCase()?.startsWith("/LOGIN")) ||
     (loggedIn && pathname.toUpperCase()?.startsWith("/REGISTER")) ||
