@@ -2,7 +2,7 @@
 
 import { Text } from "@chakra-ui/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "urql";
 import { USER_ME_QUERY } from "../graphql/users.query";
 
@@ -24,6 +24,16 @@ export default function Navbar() {
   };
 
   const userLoggedIn = !fetching && data?.userMe;
+
+  useEffect(() => {
+    if (userLoggedIn) {
+      document.cookie = `loggedIn=true; path=/; max-age=${
+        60 * 60 * 2
+      }; samesite=lax`;
+    } else {
+      document.cookie = "loggedIn=; path=/; max-age=0; samesite=lax";
+    }
+  }, [userLoggedIn]);
 
   if (fetching && !data) return null;
 

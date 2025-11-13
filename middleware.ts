@@ -1,7 +1,6 @@
+import { cp } from "fs";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { USER_ME_QUERY } from "./app/graphql/users.query";
-import { cacheExchange, createClient, fetchExchange } from "urql";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -14,33 +13,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const apiUrl = new URL("/api/check-session", request.url).toString();
-  const res = await fetch(apiUrl, {
-    headers: {
-      cookie: request.headers.get("cookie") || "",
-    },
-    credentials: "include",
-  });
+  const loggedIn = request.cookies.get("loggedIn")?.value;
 
-  const data = await res.json();
-  console.log(data, "DATA MO");
-
-  let loggedIn = false;
-  const client = createClient({
-    url: process.env.NEXT_PUBLIC_GRAPH_API!,
-    fetchOptions: {
-      credentials: "include",
-    },
-    exchanges: [cacheExchange, fetchExchange],
-  });
-  const user = await client
-    .query(USER_ME_QUERY, {
-      requestPolicy: "cache-and-network",
-    })
-    .toPromise();
-
-  loggedIn = user?.data?.userMe !== null;
-  console.log(loggedIn, user);
   if (
     (loggedIn && pathname.toUpperCase()?.startsWith("/LOGIN")) ||
     (loggedIn && pathname.toUpperCase()?.startsWith("/REGISTER")) ||
