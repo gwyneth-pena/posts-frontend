@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
     request.cookies.get("session_id")?.value ||
     request.cookies.get("session_id");
   const { pathname } = request.nextUrl;
-
+  console.log(sessionId);
   if (
     (sessionId && pathname.toUpperCase()?.startsWith("/LOGIN")) ||
     (sessionId && pathname.toUpperCase()?.startsWith("/REGISTER")) ||
