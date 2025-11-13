@@ -40,11 +40,11 @@ export default async function Home({ searchParams }: any) {
         offset,
       },
       {
-        requestPolicy: "network-only",
+        requestPolicy: "cache-and-network",
       }
     )
     .toPromise();
-
+  console.log(user);
   const totalPosts = posts.data?.totalPosts || 0;
   const totalPages = Math.ceil(totalPosts / limit);
 
