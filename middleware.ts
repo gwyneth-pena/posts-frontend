@@ -14,6 +14,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const apiUrl = new URL("/api/check-session", request.url).toString();
+  const res = await fetch(apiUrl, {
+    headers: {
+      cookie: request.headers.get("cookie") || "",
+    },
+    credentials: "include",
+  });
+
+  const data = await res.json();
+  console.log(data, "DATA MO");
+
   let loggedIn = false;
   const client = createClient({
     url: process.env.NEXT_PUBLIC_GRAPH_API!,
