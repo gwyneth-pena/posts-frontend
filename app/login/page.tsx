@@ -1,6 +1,8 @@
 import { Container, Box, Flex } from "@chakra-ui/react";
-import { GetServerSideProps, Metadata } from "next";
+import { Metadata } from "next";
 import LoginForm from "./LoginForm";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Login - MyPosts",
@@ -8,6 +10,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Login({ searchParams }: any) {
+  const sessionCookie = (await cookies()).get("session_id")?.value;
+
+  if (sessionCookie) {
+    redirect("/");
+  }
+  
   const params = (await searchParams) ?? null;
   const next = params?.next ?? null;
   return (
@@ -31,18 +39,3 @@ export default async function Login({ searchParams }: any) {
     </Flex>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const sessionId = req.cookies["session_id"];
-
-  if (sessionId) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
-};

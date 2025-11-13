@@ -2,6 +2,8 @@ import { Box, Container, Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
 import ForgotPasswordForm from "./ForgotPasswordForm";
 import ForgotPasswordEmailForm from "./ForgotPasswordEmailForm";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Change Password - MyPosts",
@@ -9,6 +11,12 @@ export const metadata: Metadata = {
 };
 
 export default async function ForgotPassword({ searchParams }: any) {
+  const sessionCookie = (await cookies()).get("session_id")?.value;
+
+  if (sessionCookie) {
+    redirect("/");
+  }
+
   const params = (await searchParams) ?? null;
   const token = params?.token ?? null;
   const selector = params?.selector ?? null;

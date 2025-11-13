@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "urql";
 import { USER_RESET_PASSWORD_MUTATION } from "../graphql/users.mutation";
-import { GetServerSideProps } from "next";
 
 type ChangePassData = {
   password: string;
@@ -123,18 +122,3 @@ export default function ForgotPasswordForm({ token, selector }: any) {
     </form>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const sessionId = req.cookies["session_id"];
-
-  if (sessionId) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
-};

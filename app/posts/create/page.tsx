@@ -1,6 +1,8 @@
 import { Box, Container, Flex } from "@chakra-ui/react";
 import CreatePostForm from "./CreatePostForm";
-import { GetServerSideProps, Metadata } from "next";
+import { Metadata } from "next";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Create Post - MyPosts",
@@ -8,6 +10,12 @@ export const metadata: Metadata = {
 };
 
 export default async function CreatePost() {
+  const sessionCookie = (await cookies()).get("session_id")?.value;
+
+  if (!sessionCookie) {
+    redirect("/login?next=%2Fposts%2Fcreate");
+  }
+
   return (
     <Flex
       minH={"80vh"}
@@ -29,20 +37,3 @@ export default async function CreatePost() {
     </Flex>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async ({
-  req,
-}) => {
-  const sessionId = req.cookies["session_id"];
-
-  if (!sessionId) {
-    return {
-      redirect: {
-        destination: `/login?next=${encodeURIComponent("/posts/create")}`,
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
-};
