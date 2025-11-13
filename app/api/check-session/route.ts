@@ -16,5 +16,5 @@ export async function GET(req: Request) {
 
   const loggedIn = Boolean(sessionId);
   console.log(loggedIn);
-  return NextResponse.json({ loggedIn });
+  return NextResponse.json({ loggedIn, cookieHeader });
 }
