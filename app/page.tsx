@@ -57,7 +57,7 @@ export default async function Home({ searchParams }: any) {
             justify="end"
             align="center"
             mb={6}
-            width={["100%", "90%", "600px"]}
+            width={["100%"]}
           >
             <ButtonLink href="/posts/create"> Share Your Thoughts </ButtonLink>
           </Flex>
