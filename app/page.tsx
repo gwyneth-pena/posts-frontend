@@ -1,7 +1,6 @@
 import { Container, Flex } from "@chakra-ui/react";
 import { POSTS_QUERY } from "./graphql/posts.query";
 import { Metadata } from "next";
-import { IconMessageCircle } from "@tabler/icons-react";
 import { createUrqlClient } from "./lib/urql-server";
 import PostItem from "./components/PostItem";
 import { USER_ME_QUERY } from "./graphql/users.query";
@@ -41,7 +40,7 @@ export default async function Home({ searchParams }: any) {
         offset,
       },
       {
-        requestPolicy: "cache-and-network",
+        requestPolicy: "network-only",
       }
     )
     .toPromise();

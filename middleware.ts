@@ -1,4 +1,3 @@
-import { cp } from "fs";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -13,7 +12,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const loggedIn = request.cookies.get("loggedIn")?.value;
+  let loggedIn = request.cookies.get("loggedIn")?.value;
+  if (loggedIn && loggedIn?.toLowerCase() !== "true") {
+    loggedIn = "true";
+  }
 
   if (
     (loggedIn && pathname.toUpperCase()?.startsWith("/LOGIN")) ||
