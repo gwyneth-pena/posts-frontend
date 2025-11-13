@@ -14,6 +14,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const res = await fetch("/api/check-session", {
+    credentials: "include", // ensures HttpOnly cookies are sent
+  });
+  const data = await res.json();
+  console.log(data.loggedIn, 'test 1');
+
   let loggedIn = false;
   const cookieHeader = request.headers.get("cookie") || "";
   const client = createClient({
