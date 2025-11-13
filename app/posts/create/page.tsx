@@ -1,6 +1,6 @@
 import { Box, Container, Flex } from "@chakra-ui/react";
 import CreatePostForm from "./CreatePostForm";
-import { Metadata } from "next";
+import { GetServerSideProps, Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Create Post - MyPosts",
@@ -23,9 +23,26 @@ export default async function CreatePost() {
           borderRadius="md"
           boxShadow="md"
         >
-          <CreatePostForm/>
+          <CreatePostForm />
         </Box>
       </Container>
     </Flex>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+}) => {
+  const sessionId = req.cookies["session_id"];
+
+  if (!sessionId) {
+    return {
+      redirect: {
+        destination: `/login?next=${encodeURIComponent("/posts/create")}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
+};

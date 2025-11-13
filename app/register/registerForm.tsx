@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "urql";
 import { USER_CREATE_MUTATION } from "../graphql/users.mutation";
 import { useState } from "react";
+import { GetServerSideProps } from "next";
 
 type RegisterData = {
   username: string;
@@ -188,3 +189,19 @@ export default function RegisterForm() {
     </form>
   );
 }
+
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const sessionId = req.cookies["session_id"];
+
+  if (sessionId) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  
+  return { props: {} };
+};

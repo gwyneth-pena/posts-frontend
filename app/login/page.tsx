@@ -1,5 +1,5 @@
 import { Container, Box, Flex } from "@chakra-ui/react";
-import { Metadata } from "next";
+import { GetServerSideProps, Metadata } from "next";
 import LoginForm from "./LoginForm";
 
 export const metadata: Metadata = {
@@ -31,3 +31,18 @@ export default async function Login({ searchParams }: any) {
     </Flex>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const sessionId = req.cookies["session_id"];
+
+  if (sessionId) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
+};
