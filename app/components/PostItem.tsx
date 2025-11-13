@@ -38,7 +38,7 @@ export default function PostItem({
   const [userVote, setUserVote] = useState(post.userVote);
   const [likeCount, setLikeCount] = useState(post.likeCount || 0);
   const [dislikeCount, setDislikeCount] = useState(post.dislikeCount || 0);
-
+  console.log(user, "USER", post);
   const likeOrDislikePost = useCallback(
     async (value: number) => {
       if (!user) {
