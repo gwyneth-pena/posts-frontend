@@ -33,7 +33,7 @@ export async function middleware(request: NextRequest) {
     .toPromise();
 
   loggedIn = user?.data?.userMe !== null;
-  console.log(loggedIn, user, cookieHeader);
+  console.log(loggedIn, user, cookieHeader, request.headers);
   if (
     (loggedIn && pathname.toUpperCase()?.startsWith("/LOGIN")) ||
     (loggedIn && pathname.toUpperCase()?.startsWith("/REGISTER")) ||
