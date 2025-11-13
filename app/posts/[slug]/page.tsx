@@ -4,7 +4,6 @@ import { POSTS_GET_ONE_QUERY } from "@/app/graphql/posts.query";
 import { createUrqlClient } from "@/app/lib/urql-server";
 import { Container, Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function generateMetadata({
@@ -35,12 +34,6 @@ export async function generateMetadata({
 }
 
 export default async function Post({ params }: any) {
-  const sessionCookie = (await cookies()).get("session_id")?.value;
-
-  if (!sessionCookie) {
-    redirect("/login");
-  }
-
   const data = await params;
   const slug = data?.slug ?? null;
 

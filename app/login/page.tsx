@@ -1,8 +1,6 @@
 import { Container, Box, Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
 import LoginForm from "./LoginForm";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Login - MyPosts",
@@ -10,13 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Login({ searchParams }: any) {
-  console.log(await cookies());
-  const sessionCookie = (await cookies()).get("session_id");
-  console.log(sessionCookie);
-  if (sessionCookie) {
-    redirect("/");
-  }
-  
   const params = (await searchParams) ?? null;
   const next = params?.next ?? null;
   return (

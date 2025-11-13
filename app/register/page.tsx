@@ -1,20 +1,13 @@
 import { Container, Box, Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
 import RegisterForm from "./registerForm";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Register - MyPosts",
   description: "Create an account to join our community",
 };
 
-export default async function Register() {
-  const sessionCookie = (await cookies()).get("session_id")?.value;
-
-  if (sessionCookie) {
-    redirect("/");
-  }
+export default function Register() {
   return (
     <Flex
       minH={"80vh"}
