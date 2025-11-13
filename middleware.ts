@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
+  console.log(request.cookies, "TEST");
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon.ico") ||
