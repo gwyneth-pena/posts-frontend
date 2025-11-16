@@ -98,9 +98,6 @@ export default async function Profile({
               <Text fontSize="2xl" fontWeight="bold">
                 {user.username}
               </Text>
-              <Text fontSize="sm" color="gray.500">
-                {user.email ?? "No email provided"}
-              </Text>
             </Box>
           </HStack>
         </Flex>
