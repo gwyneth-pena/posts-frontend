@@ -32,60 +32,75 @@ export default function PostItem({
   const user = useUser();
 
   const [, vote] = useMutation(VOTE_CREATE_MUTATION);
-  const [, updateVoteByPost] = useMutation(VOTE_UPDATE_BY_POST_ID_MUTATION);
-  const [, deleteVoteByPost] = useMutation(VOTE_DELETE_BY_POST_ID_MUTATION);
+  const [, updateVote] = useMutation(VOTE_UPDATE_BY_POST_ID_MUTATION);
+  const [, deleteVote] = useMutation(VOTE_DELETE_BY_POST_ID_MUTATION);
 
   const [userVote, setUserVote] = useState(post.userVote);
   const [likeCount, setLikeCount] = useState(post.likeCount || 0);
   const [dislikeCount, setDislikeCount] = useState(post.dislikeCount || 0);
 
+  const redirectIfNotLogged = useCallback(() => {
+    if (!user) {
+      router.push("/login");
+      return true;
+    }
+    return false;
+  }, [user, router]);
+
+  const applyVoteChange = (value: number, increment: boolean) => {
+    const adjust = increment ? 1 : -1;
+    if (value === 1) setLikeCount((prev: any) => prev + adjust);
+    else setDislikeCount((prev: any) => prev + adjust);
+  };
+
   const likeOrDislikePost = useCallback(
     async (value: number) => {
-      if (!user) {
-        router.push("/login");
+      if (redirectIfNotLogged()) return;
+
+      const isSameVote = userVote === value;
+      const isNewVote = userVote === null;
+
+      let res;
+
+      if (isSameVote) {
+        res = await deleteVote({ postId: post.id });
+        if (res.data) {
+          setUserVote(null);
+          applyVoteChange(value, false);
+        }
         return;
       }
 
-      if (userVote === value) {
-        await deleteVoteByPost({ postId: post.id });
-        setUserVote(null);
-        value === 1
-          ? setLikeCount((prev: any) => prev - 1)
-          : setDislikeCount((prev: any) => prev - 1);
-      } else if (userVote === null) {
-        await vote({ postId: post.id, value });
-        setUserVote(value);
-        value === 1
-          ? setLikeCount((prev: any) => prev + 1)
-          : setDislikeCount((prev: any) => prev + 1);
-      } else {
-        await updateVoteByPost({ postId: post.id, value });
-        setUserVote(value);
-        if (value === 1) {
-          setLikeCount((prev: any) => prev + 1);
-          setDislikeCount((prev: any) => prev - 1);
-        } else {
-          setLikeCount((prev: any) => prev - 1);
-          setDislikeCount((prev: any) => prev + 1);
+      if (isNewVote) {
+        res = await vote({ postId: post.id, value });
+        if (res.data) {
+          setUserVote(value);
+          applyVoteChange(value, true);
         }
+        return;
+      }
+
+      res = await updateVote({ postId: post.id, value });
+      if (res.data) {
+        setUserVote(value);
+        applyVoteChange(value, true);
+        applyVoteChange(value === 1 ? -1 : 1, false);
       }
     },
-    [userVote, post.id, vote, updateVoteByPost, deleteVoteByPost, router, user]
+    [userVote, post.id, vote, updateVote, deleteVote, redirectIfNotLogged]
   );
 
   const removeVote = useCallback(
     async (value: number) => {
-      if (!user) {
-        router.push("/login");
-        return;
+      if (redirectIfNotLogged()) return;
+
+      const res = await deleteVote({ postId: post.id });
+      if (res.data) {
+        setUserVote(null);
+        applyVoteChange(value, false);
       }
-      await deleteVoteByPost({ postId: post.id });
-      setUserVote(null);
-      value === 1
-        ? setLikeCount((prev: any) => prev - 1)
-        : setDislikeCount((prev: any) => prev - 1);
     },
-    [post.id, deleteVoteByPost, router, user]
+    [deleteVote, redirectIfNotLogged]
   );
 
   return (
@@ -99,9 +114,9 @@ export default function PostItem({
     >
       <Flex justify="space-between" align="start" mb={2}>
         <h4
-          style={{ fontWeight: "600" }}
-          onClick={() => router.push(`/posts/${post.slug}`)}
+          style={{ fontWeight: 600 }}
           className="cursor-pointer hover:underline"
+          onClick={() => router.push(`/posts/${post.slug}`)}
         >
           {post.title}
         </h4>
@@ -114,6 +129,7 @@ export default function PostItem({
       >
         <small className="text-muted">{post.user.username}</small>
       </Link>
+
       <p
         className="mt-3"
         style={{
@@ -126,17 +142,19 @@ export default function PostItem({
       >
         {post.text.replace(/<[^>]+>/g, "")}
       </p>
+
       <Flex justify="space-between" align="start">
         <small className="text-muted">
           {format(new Date(Number(post.createdAt)), "PPP 'at' p")}
         </small>
+
         <div className="d-flex">
           {userVote === 1 ? (
             <IconThumbUpFilled
-              onClick={() => removeVote(1)}
               size={20}
               stroke={1.5}
               className="me-1 cursor-pointer"
+              onClick={() => removeVote(1)}
             />
           ) : (
             <IconThumbUp
@@ -150,10 +168,10 @@ export default function PostItem({
 
           {userVote === -1 ? (
             <IconThumbDownFilled
-              onClick={() => removeVote(-1)}
               size={20}
               stroke={1.5}
               className="me-1 cursor-pointer"
+              onClick={() => removeVote(-1)}
             />
           ) : (
             <IconThumbDown
