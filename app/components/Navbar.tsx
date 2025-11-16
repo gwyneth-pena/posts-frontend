@@ -20,7 +20,7 @@ export default function Navbar() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({}),
     });
-    window.location.href = "/login";
+    // window.location.href = "/login";
   };
 
   const userLoggedIn = !fetching && data?.userMe;
