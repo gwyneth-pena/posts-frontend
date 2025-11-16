@@ -14,9 +14,11 @@ export default function Navbar() {
   });
 
   const logout = async () => {
-    await fetch("/logout", {
-      method: "POST",
+    await fetch(`${process.env.NEXT_PUBLIC_API}/logout`, {
       credentials: "include",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
     });
     window.location.href = "/login";
   };
