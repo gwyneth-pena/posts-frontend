@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
         source: "/graphql",
         destination: process.env.NEXT_PUBLIC_GRAPH_API,
       },
+      {
+        source: "/logout",
+        destination: `${process.env.NEXT_PUBLIC_GRAPH_API}/logout`,
+      }
     ];
   },
 };
