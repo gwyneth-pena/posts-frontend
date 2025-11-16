@@ -3,7 +3,6 @@ import { POSTS_QUERY } from "./graphql/posts.query";
 import { Metadata } from "next";
 import { createUrqlClient } from "./lib/urql-server";
 import PostItem from "./components/PostItem";
-import { USER_ME_QUERY } from "./graphql/users.query";
 import PaginationWrapped from "./components/PaginationWrapped";
 import ButtonLink from "./components/ButtonLink";
 
