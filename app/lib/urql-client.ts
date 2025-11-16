@@ -3,7 +3,7 @@
 import { createClient, cacheExchange, fetchExchange } from "urql";
 
 export const UrqlClient = createClient({
-  url: process.env.NEXT_PUBLIC_GRAPH_API || "",
+  url: '/graphql',
   fetchOptions: {
     credentials: "include",
   },
