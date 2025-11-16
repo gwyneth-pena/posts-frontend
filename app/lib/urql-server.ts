@@ -6,7 +6,7 @@ export async function createUrqlClient() {
 
   const cookieHeader = await cookies();
   const cookie = cookieHeader?.toString();
-  console.log(cookie);
+
   const client = createClient({
     url: process.env.NEXT_PUBLIC_GRAPH_API!,
     fetchOptions: {

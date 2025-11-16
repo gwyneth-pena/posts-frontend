@@ -31,7 +31,6 @@ export default async function Home({ searchParams }: any) {
       }
     )
     .toPromise();
-  console.log(posts);
 
   const totalPosts = posts.data?.totalPosts || 0;
   const totalPages = Math.ceil(totalPosts / limit);
