@@ -38,6 +38,7 @@ export default function PostItem({
   const [userVote, setUserVote] = useState(post.userVote);
   const [likeCount, setLikeCount] = useState(post.likeCount || 0);
   const [dislikeCount, setDislikeCount] = useState(post.dislikeCount || 0);
+  const [isVoting, setIsVoting] = useState(false);
 
   const redirectIfNotLogged = useCallback(() => {
     if (!user) {
@@ -48,59 +49,81 @@ export default function PostItem({
   }, [user, router]);
 
   const applyVoteChange = (value: number, increment: boolean) => {
-    const adjust = increment ? 1 : -1;
-    if (value === 1) setLikeCount((prev: any) => prev + adjust);
-    else setDislikeCount((prev: any) => prev + adjust);
+    const diff = increment ? 1 : -1;
+    if (value === 1) setLikeCount((prev: any) => prev + diff);
+    else setDislikeCount((prev: any) => prev + diff);
   };
 
   const likeOrDislikePost = useCallback(
     async (value: number) => {
       if (redirectIfNotLogged()) return;
+      if (isVoting) return;
 
-      const isSameVote = userVote === value;
-      const isNewVote = userVote === null;
+      setIsVoting(true);
 
-      let res;
+      try {
+        const isSame = userVote === value;
+        const isNew = userVote === null;
 
-      if (isSameVote) {
-        res = await deleteVote({ postId: post.id });
-        if (res.data) {
-          setUserVote(null);
-          applyVoteChange(value, false);
+        let res;
+
+        if (isSame) {
+          res = await deleteVote({ postId: post.id });
+          if (res.data) {
+            setUserVote(null);
+            applyVoteChange(value, false);
+          }
+          return;
         }
-        return;
-      }
 
-      if (isNewVote) {
-        res = await vote({ postId: post.id, value });
+        if (isNew) {
+          res = await vote({ postId: post.id, value });
+          if (res.data) {
+            setUserVote(value);
+            applyVoteChange(value, true);
+          }
+          return;
+        }
+
+        res = await updateVote({ postId: post.id, value });
         if (res.data) {
           setUserVote(value);
           applyVoteChange(value, true);
+          applyVoteChange(value === 1 ? -1 : 1, false);
         }
-        return;
-      }
-
-      res = await updateVote({ postId: post.id, value });
-      if (res.data) {
-        setUserVote(value);
-        applyVoteChange(value, true);
-        applyVoteChange(value === 1 ? -1 : 1, false);
+      } finally {
+        setIsVoting(false);
       }
     },
-    [userVote, post.id, vote, updateVote, deleteVote, redirectIfNotLogged]
+    [
+      userVote,
+      post.id,
+      vote,
+      updateVote,
+      deleteVote,
+      redirectIfNotLogged,
+      isVoting,
+    ]
   );
 
   const removeVote = useCallback(
     async (value: number) => {
       if (redirectIfNotLogged()) return;
+      if (isVoting) return;
 
-      const res = await deleteVote({ postId: post.id });
-      if (res.data) {
-        setUserVote(null);
-        applyVoteChange(value, false);
+      setIsVoting(true);
+
+      try {
+        const res = await deleteVote({ postId: post.id });
+        if (res.data) {
+          setUserVote(null);
+          applyVoteChange(value, false);
+        }
+      } finally {
+        setIsVoting(false);
       }
     },
-    [deleteVote, redirectIfNotLogged]
+    [deleteVote, redirectIfNotLogged, isVoting]
   );
 
   return (
@@ -149,40 +172,43 @@ export default function PostItem({
         </small>
 
         <div className="d-flex">
+          {/* LIKE BUTTON */}
           {userVote === 1 ? (
             <IconThumbUpFilled
               size={20}
               stroke={1.5}
               className="me-1 cursor-pointer"
-              onClick={() => removeVote(1)}
+              onClick={() => !isVoting && removeVote(1)}
             />
           ) : (
             <IconThumbUp
               size={20}
               stroke={1.5}
               className="me-1 cursor-pointer"
-              onClick={() => likeOrDislikePost(1)}
+              onClick={() => !isVoting && likeOrDislikePost(1)}
             />
           )}
           <small className="me-3">{formatNumber(likeCount)}</small>
 
+          {/* DISLIKE BUTTON */}
           {userVote === -1 ? (
             <IconThumbDownFilled
               size={20}
               stroke={1.5}
               className="me-1 cursor-pointer"
-              onClick={() => removeVote(-1)}
+              onClick={() => !isVoting && removeVote(-1)}
             />
           ) : (
             <IconThumbDown
               size={20}
               stroke={1.5}
               className="me-1 cursor-pointer"
-              onClick={() => likeOrDislikePost(-1)}
+              onClick={() => !isVoting && likeOrDislikePost(-1)}
             />
           )}
           <small className="me-3">{formatNumber(dislikeCount)}</small>
 
+          {/* COMMENTS */}
           <IconMessageCircle
             size={20}
             stroke={1.5}
