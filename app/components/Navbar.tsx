@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useQuery } from "urql";
 import { USER_ME_QUERY } from "../graphql/users.query";
+import { config } from "@/config.env";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +15,7 @@ export default function Navbar() {
   });
 
   const logout = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_API}/logout`, {
+    await fetch(`${config.NEXT_PUBLIC_API}/logout`, {
       credentials: "include",
       method: "POST",
       headers: { "Content-Type": "application/json" },

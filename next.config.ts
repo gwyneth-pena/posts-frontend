@@ -1,21 +1,22 @@
 import type { NextConfig } from "next";
+import { config } from "./config.env";
 
 const nextConfig: NextConfig = {
   /* config options here */
   async rewrites() {
-    if (!process.env.NEXT_PUBLIC_GRAPH_API) {
+    if (!config.NEXT_PUBLIC_GRAPH_API) {
       throw new Error("NEXT_PUBLIC_GRAPH_API is not defined");
     }
 
     return [
       {
         source: "/graphql",
-        destination: process.env.NEXT_PUBLIC_GRAPH_API,
+        destination: config.NEXT_PUBLIC_GRAPH_API,
       },
       {
         source: "/logout",
-        destination: `${process.env.NEXT_PUBLIC_GRAPH_API}/logout`,
-      }
+        destination: `${config.NEXT_PUBLIC_GRAPH_API}/logout`,
+      },
     ];
   },
 };
