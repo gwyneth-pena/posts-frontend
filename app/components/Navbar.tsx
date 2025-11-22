@@ -16,7 +16,7 @@ export default function Navbar() {
 
   const logout = async () => {
     await fetch(`${config.NEXT_PUBLIC_API}/logout`, {
-      credentials: "same-origin",
+      credentials: "include",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({}),
