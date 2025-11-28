@@ -13,10 +13,6 @@ const nextConfig: NextConfig = {
         source: "/graphql",
         destination: config.NEXT_PUBLIC_GRAPH_API,
       },
-      {
-        source: "/logout",
-        destination: `${config.NEXT_PUBLIC_GRAPH_API}/logout`,
-      },
     ];
   },
 };

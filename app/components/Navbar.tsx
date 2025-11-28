@@ -3,9 +3,10 @@
 import { Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useQuery } from "urql";
+import { useMutation, useQuery } from "urql";
 import { USER_ME_QUERY } from "../graphql/users.query";
 import { config } from "@/config.env";
+import { USER_LOGOUT_MUTATION } from "../graphql/users.mutation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,15 +14,13 @@ export default function Navbar() {
     query: USER_ME_QUERY,
     requestPolicy: "cache-and-network",
   });
+  const [logoutResult, executeLogout] = useMutation(USER_LOGOUT_MUTATION);
 
   const logout = async () => {
-    await fetch(`${config.NEXT_PUBLIC_API}/logout`, {
-      credentials: "include",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
-    });
-    window.location.href = "/login";
+    await executeLogout();
+    if (logoutResult.data?.logoutUser) {
+      window.location.href = "/login";
+    }
   };
 
   const userLoggedIn = !fetching && data?.userMe;
